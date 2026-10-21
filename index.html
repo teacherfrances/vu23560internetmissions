@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Internet missions | VU23560</title>
+<style>
+:root{--ink:#111;--grey:#4d4d4d;--mid:#8a8a8a;--line:#8f8f8f;--pale:#e6e6e6;--panel:#f2f2f2;--q:#1F5FA8;--c1:#0E6E70;--c2:#B4600B;--c3:#6A3FA0;--c4:#1F5FA8;--c5:#2E7D32;--good:#1E7A46;--warn:#9b3b32;--disp:"Century Gothic","URW Gothic","Avant Garde","Segoe UI",Arial,sans-serif;--body:Calibri,Carlito,"Segoe UI",Candara,"Helvetica Neue",Arial,sans-serif}
+html{font-size:28px}
+html.s0{font-size:24px}
+html.s2{font-size:34px}
+html.s3{font-size:42px}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+body{margin:0;background:#fff;color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.4}
+button{font:inherit;font-size:1rem;color:inherit}
+h1,h2,h3,.disp{font-family:var(--disp);font-weight:700;margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+/* top bar */
+.top{position:sticky;top:0;z-index:50;background:var(--ink);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .5rem;padding:.3rem .5rem}
+.top .ttl{font-family:var(--disp);font-weight:700;flex:1;min-width:6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb{background:#fff;color:var(--ink);border:0;border-radius:.2rem;min-height:2.1rem;min-width:2.1rem;padding:0 .45rem;font-weight:700;cursor:pointer}
+.pill{background:#fff;color:var(--ink);border-radius:1rem;padding:.1rem .5rem;font-weight:700;white-space:nowrap}
+.saved{color:#bfe8c9;opacity:0;transition:opacity .3s;white-space:nowrap}
+.saved.on{opacity:1}
+.prog{height:.3rem;background:var(--pale)}
+.prog i{display:block;height:100%;width:0;background:var(--c1);transition:width .3s}
+.wrap{max-width:1500px;margin:0 auto;padding:.6rem .6rem 1rem}
+/* cover */
+.addrbar{display:flex;align-items:center;gap:.5rem;background:#222;color:#ddd;border-radius:.3rem .3rem 0 0;padding:.35rem .6rem;font-family:Consolas,"Lucida Console",monospace}
+.addrbar .dots{display:flex;gap:.2rem}.addrbar .dots i{width:.45rem;height:.45rem;border-radius:50%;background:#777;display:block}
+.addrbar .u{flex:1;background:#3a3a3a;border-radius:1rem;padding:.1rem .6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{background:#fff;color:var(--ink);font-weight:700;padding:0 .4rem;border-radius:.2rem;font-family:var(--disp)}
+.cover{background:var(--panel);border-left:.4rem solid var(--ink);padding:.7rem .9rem;margin-bottom:.8rem}
+.eyebrow{font-size:.8rem;color:var(--grey);font-family:var(--disp);font-weight:700}
+.cover h1{font-size:1.7rem;line-height:1.15;margin:.2rem 0}
+.sub{margin:.2rem 0 0}
+.tiles{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));margin:.6rem 0}
+.tile{display:flex;align-items:stretch;text-align:left;border:.1rem solid var(--ink);border-bottom-width:.3rem;background:#fff;padding:0;cursor:pointer;min-height:4rem}
+.tile .L{background:var(--ink);color:#fff;font-family:var(--disp);font-weight:700;font-size:1.3rem;display:flex;align-items:center;justify-content:center;min-width:2.6rem}
+.tile .tx{padding:.4rem .6rem;display:flex;flex-direction:column;gap:.15rem}
+.tile .tx b{font-family:var(--disp);color:var(--q)}
+.tile .st{font-weight:700;color:var(--grey)}
+.tile .st.ok{color:var(--good)}
+/* section bar and cards */
+.secbar{display:flex;align-items:stretch;margin-bottom:.5rem}
+.secbar .L{background:var(--ink);color:#fff;font-family:var(--disp);font-weight:700;font-size:1.05rem;min-width:2.2rem;display:flex;align-items:center;justify-content:center}
+.secbar .T{flex:1;background:var(--pale);border:.08rem solid var(--ink);border-left:0;padding:.25rem .55rem;font-family:var(--disp);font-weight:700;display:flex;align-items:center}
+.card{border:.1rem solid var(--ink);border-bottom-width:.3rem;background:#fff;padding:.6rem .7rem}
+.card.flash{animation:fl .6s 2}
+@keyframes fl{50%{box-shadow:0 0 0 .25rem var(--c2)}}
+.chead{display:flex;gap:.5rem;align-items:flex-start;margin-bottom:.4rem}
+.num{flex:0 0 auto;width:1.7rem;height:1.7rem;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:.85rem}
+.qt{color:var(--q);font-size:1.05rem;line-height:1.2}
+.ask{margin:.2rem 0 .5rem}
+/* note boxes with badge column */
+.nb{display:flex;background:var(--panel);margin:.5rem 0;min-height:2.4rem}
+.nb .bd{flex:0 0 1.8rem;display:flex;justify-content:center;padding-top:.25rem;color:#fff;font-weight:700;font-size:1.05rem;font-family:var(--disp)}
+.nb .bx{padding:.35rem .55rem}
+.nb .bx b{display:block}
+.nb.i .bd{background:#555}
+.nb.t .bd{background:var(--ink)}
+.nb.w .bd{background:var(--warn)}
+.nb.g .bd{background:var(--good)}
+/* options */
+.opts{display:grid;gap:.4rem}
+.opt{display:flex;align-items:stretch;width:100%;text-align:left;background:#fff;border:.1rem solid var(--ink);padding:0;min-height:2.3rem;cursor:pointer}
+.opt .lt{flex:0 0 1.7rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:var(--disp)}
+.opt .ot{padding:.3rem .5rem;flex:1;display:flex;align-items:center}
+.opt.k0 .lt{background:var(--c1)}.opt.k1 .lt{background:var(--c2)}.opt.k2 .lt{background:var(--c3)}.opt.k3 .lt{background:var(--c4)}.opt.k4 .lt{background:var(--c5)}.opt.k5 .lt{background:#8a3b5c}
+.opt.sel{box-shadow:inset 0 0 0 .14rem var(--q);background:#eaf1fa}
+.opt.right{background:var(--ink);color:#fff}
+.opt.wrong{background:repeating-linear-gradient(45deg,#e4e4e4 0 .3rem,#cfcfcf .3rem .6rem);text-decoration:line-through;color:#333}
+.opt:disabled{cursor:default}
+.btn{background:var(--ink);color:#fff;border:.1rem solid var(--ink);padding:.25rem .7rem;min-height:2.2rem;font-weight:700;cursor:pointer}
+.btn.alt{background:#fff;color:var(--ink)}
+.btn.wait{background:#fff;color:var(--grey);border-style:dashed}
+.row{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.4rem 0}
+.gap-row{border:.08rem solid var(--line);padding:.4rem .5rem;margin:.4rem 0}
+.blank{display:inline-block;min-width:3.2rem;border-bottom:.1rem solid var(--ink);text-align:center;font-weight:700;color:var(--q)}
+.chip{border:.1rem solid var(--ink);background:#fff;border-radius:1.2rem;padding:.1rem .7rem;min-height:2.4rem;cursor:pointer}
+.chip:nth-child(4n+1){border-color:var(--c1)}.chip:nth-child(4n+2){border-color:var(--c2)}.chip:nth-child(4n+3){border-color:var(--c3)}.chip:nth-child(4n+4){border-color:var(--c4)}
+.chip:disabled{opacity:.45;cursor:not-allowed}
+.small{font-size:.85rem;color:var(--grey)}
+/* bottom bar */
+.bot{position:sticky;bottom:0;z-index:50;background:#fff;border-top:.12rem solid var(--ink);display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;padding:.35rem .6rem}
+.bot .tip{flex:1;min-width:8rem;color:var(--grey)}
+/* stage layout */
+.stage{display:grid;gap:.7rem}
+@media (min-width:1200px){.stage{grid-template-columns:minmax(0,42%) minmax(0,1fr);align-items:start}}
+/* desktop */
+.desk{font-size:.72rem;border:.15rem solid var(--ink);border-bottom-width:.4rem;display:flex;flex-direction:column;height:680px;position:relative;overflow:hidden}
+@media (min-width:1200px){.desk{height:calc(100vh - 9rem);min-height:560px}}
+.desk button{font-size:1em}
+.wall{flex:1;position:relative;overflow:hidden;background:linear-gradient(160deg,#d6e4e8 0%,#a9c4cc 55%,#7d9ea8 100%)}
+.icons{position:absolute;left:.6em;top:.6em;bottom:.6em;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;gap:.4em}
+.dicon{background:none;border:.12em solid transparent;border-radius:.3em;padding:.3em .1em;display:flex;flex-direction:column;align-items:center;gap:.25em;cursor:pointer;width:6.2em;color:var(--ink)}
+.dicon:hover,.dicon:focus-visible{border-color:#fff;background:rgba(255,255,255,.35)}
+.dicon svg{width:2.8em;height:2.8em}
+.dicon span{background:rgba(255,255,255,.8);padding:0 .25em;border-radius:.2em;text-align:center;line-height:1.15;font-size:.95em}
+.taskbar{min-height:3em;background:#1f1f1f;display:flex;align-items:center;gap:.4em;padding:.25em .4em;color:#fff}
+.start{background:#fff;color:var(--ink);border:0;border-radius:.2em;padding:.2em .6em;font-weight:700;min-height:2.4em;cursor:default}
+.tbtn{background:#444;color:#fff;border:0;border-bottom:.15em solid #9ad;border-radius:.2em;padding:.2em .6em;min-height:2.4em;max-width:11em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.clock{margin-left:auto;white-space:nowrap}
+.win{position:absolute;inset:.6em;background:#fff;border:.06em solid #666;border-radius:.3em;display:flex;flex-direction:column;box-shadow:0 .3em 1em rgba(0,0,0,.35);overflow:hidden;z-index:5}
+.win.sm{inset:auto;left:8%;right:8%;top:8%;max-height:84%}
+.wtitle{display:flex;align-items:center;justify-content:space-between;background:#e8e8e8;padding:.2em .3em .2em .6em;border-bottom:.06em solid #bbb;min-height:2.6em;font-weight:700;gap:.5em}
+.xbtn{width:2.4em;height:2.2em;border:.1em solid var(--ink);background:#fff;font-weight:700;border-radius:.2em;cursor:pointer;flex:0 0 auto}
+.xbtn:hover{background:#f6dcd8}
+.wbody{flex:1;overflow:auto;padding:.7em;position:relative}
+.tabs{display:flex;align-items:flex-end;gap:.4em;background:#d9dde3;padding:.3em .3em 0}
+.tab{background:#fff;border-radius:.5em .5em 0 0;padding:.2em .3em .2em .7em;display:flex;align-items:center;gap:.4em;min-width:0;flex:0 1 16em}
+.tab span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.tab button{border:0;background:none;cursor:pointer;min-width:2em;min-height:2em;font-weight:700}
+.tabs .xbtn{margin-left:auto;margin-bottom:.25em}
+.bar2{display:flex;gap:.3em;align-items:center;padding:.3em .4em;background:#f4f4f4;border-bottom:.06em solid #ccc}
+.nbtn{width:2.3em;height:2.3em;border:.06em solid #999;background:#fff;border-radius:50%;cursor:pointer}
+.nbtn:disabled{opacity:.4;cursor:default}
+.addr{flex:1;min-width:0;border:.06em solid #999;border-radius:1.2em;padding:.35em .8em;background:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.addr .lock{color:#666;margin-right:.3em}
+/* fictional sites */
+.hdr{display:flex;flex-wrap:wrap;align-items:center;gap:.3em;background:#0E5F63;color:#fff;padding:.3em .5em;margin:-.7em -.7em .7em}
+.site-lang .hdr{background:#3d4a5c}
+.logo{background:none;border:0;cursor:pointer;padding:.1em;display:flex;align-items:center;min-height:2.4em}
+.logo svg{width:2.4em;height:2.4em}
+.sname{background:none;border:0;color:#fff;font-weight:700;font-size:1.1em;cursor:pointer;padding:.3em;min-height:2.4em}
+.menu{display:flex;flex-wrap:wrap;gap:.1em;margin-left:auto;align-items:flex-start}
+.menu>button,.dd>button{background:none;border:0;color:#fff;padding:.4em .6em;min-height:2.4em;cursor:pointer}
+.dd{position:relative}
+.dd .list{position:absolute;top:100%;right:0;background:#fff;color:var(--ink);border:.1em solid var(--ink);min-width:11em;z-index:9;display:flex;flex-direction:column}
+.dd .list button{background:#fff;border:0;border-bottom:.06em solid #ddd;text-align:left;padding:.6em;min-height:2.4em;cursor:pointer;color:var(--ink)}
+.dd .list button:hover{background:#eef4f4}
+.r{padding:.5em 0;border-bottom:.06em solid #ddd}
+.r>button{background:none;border:0;color:#1a4fa0;font-size:1.1em;text-decoration:underline;cursor:pointer;padding:.2em 0;text-align:left;min-height:2em}
+.url{color:#1E7A46}
+.scard{border:.1em solid var(--ink);padding:.6em;margin:.5em 0}
+.sbox{display:flex;gap:.4em;flex-wrap:wrap;align-items:center}
+.qbox{flex:1;min-width:10em;min-height:2.5em;border:.12em solid var(--ink);border-radius:1.3em;padding:.4em .9em;background:#fff;display:flex;align-items:center}
+.qbox.empty{color:#777}
+.wtiles{display:flex;flex-wrap:wrap;gap:.35em;margin:.6em 0}
+.wt{border:.1em solid var(--ink);background:#fff;padding:.25em .6em;min-height:2.4em;cursor:pointer;border-radius:.3em}
+.sbtn{background:var(--ink);color:#fff;border:0;padding:.3em .9em;min-height:2.5em;border-radius:1.3em;cursor:pointer;font-weight:700}
+.sbtn.alt{background:#fff;color:var(--ink);border:.1em solid var(--ink)}
+.popup{position:absolute;right:.7em;bottom:.7em;left:.7em;max-width:22em;margin-left:auto;background:#fffbe6;border:.18em solid var(--ink);padding:.7em;box-shadow:0 .4em 1em rgba(0,0,0,.4);z-index:20}
+.popup .ph{display:flex;justify-content:space-between;gap:.5em;align-items:flex-start}
+.modal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:30;padding:.7em}
+.modal .box{background:#fff;padding:.8em;width:min(24em,100%);border:.12em solid var(--ink)}
+.sheet{border:.06em solid #999;padding:.7em;margin:.4em 0;background:#fff}
+.toast{position:absolute;left:.6em;bottom:3.6em;background:var(--ink);color:#fff;padding:.4em .7em;z-index:40;max-width:90%}
+.calc{display:grid;grid-template-columns:repeat(4,1fr);gap:.3em;max-width:14em}
+.calc span{border:.06em solid #aaa;text-align:center;padding:.4em 0;background:#f4f4f4}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:.3em;max-width:16em}
+.photos span{aspect-ratio:4/3;background:#c9c9c9}
+.sizes{display:inline-flex;gap:.15rem}
+.tb:disabled{opacity:.4;cursor:default}
+#guide{scroll-margin-top:3.2rem}
+.tabs{display:flex;align-items:flex-end;gap:.25em;background:#d3d8df;padding:.3em .3em 0;overflow-x:auto}
+.tab{background:#bfc6cf;border-radius:.5em .5em 0 0;display:flex;align-items:center;min-width:0;flex:0 1 13em}
+.tab.on{background:#fff}
+.tab .tt{border:0;background:none;padding:.35em .2em .35em .7em;flex:1;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;min-height:2.2em}
+.tab .tx{border:0;background:none;cursor:pointer;min-width:2em;min-height:2em;font-weight:700}
+.newtab{border:0;background:none;font-size:1.2em;min-width:2em;min-height:2em;cursor:pointer;margin-bottom:.15em}
+.tabs .xbtn{margin-left:auto;margin-bottom:.25em}
+button.addr{text-align:left;cursor:text;color:var(--ink)}
+.zm{display:flex;align-items:center;gap:.2em;white-space:nowrap}
+.bar2{flex-wrap:wrap}.bar2 .addr{flex:1 1 12em;min-width:12em}
+.bmbar{display:flex;gap:.2em;padding:.15em .4em;background:#f4f4f4;border-bottom:.06em solid #ccc;overflow-x:auto}
+.bm{border:0;background:none;padding:.25em .5em;border-radius:.3em;min-height:2.2em;white-space:nowrap;cursor:pointer}
+.bm:hover{background:#e1e1e1}
+.atray{position:sticky;top:0;z-index:25;background:#fff;border:.12em solid var(--ink);padding:.6em;margin:-.3em 0 .6em;box-shadow:0 .3em .8em rgba(0,0,0,.25)}
+.lnk{background:none;border:0;color:#1a4fa0;text-decoration:underline;cursor:pointer;padding:.1em 0;min-height:1.8em;text-align:left}
+.cols{display:grid;grid-template-columns:9em 1fr;gap:.8em}
+.side{display:flex;flex-direction:column;gap:.2em;background:#eef3f8;padding:.4em}
+.side button{border:0;background:none;text-align:left;padding:.4em .5em;min-height:2.2em;cursor:pointer;color:#14467a}
+.side button.on{background:#14467a;color:#fff}
+.tt2{border-collapse:collapse;width:100%;margin:.4em 0}
+.tt2 th,.tt2 td{border:.06em solid #999;padding:.3em .45em;text-align:left}
+.tt2 th{background:#eee}
+.ptabs{display:flex;gap:.2em;border-bottom:.12em solid #333;flex-wrap:wrap}
+.ptab{border:.06em solid #999;border-bottom:0;background:#e9e9e9;padding:.3em .8em;min-height:2.2em;cursor:pointer}
+.ptab.on{background:#fff;font-weight:700;border-color:#333}
+.acc{border:.06em solid #aaa;margin:.3em 0}
+.acc>button{width:100%;text-align:left;border:0;background:#f3f3f3;padding:.5em .6em;min-height:2.4em;cursor:pointer;font-weight:700}
+.acc .an{padding:.5em .7em}
+.cookie{position:absolute;left:0;right:0;bottom:0;background:#222;color:#fff;padding:.7em;z-index:20;box-shadow:0 -.3em 1em rgba(0,0,0,.4)}
+.virus{position:absolute;left:6%;right:6%;top:12%;background:#fff;border:.3em solid #c00;padding:.8em;z-index:22;box-shadow:0 .5em 1.5em rgba(0,0,0,.5)}
+.virus .vh{display:flex;justify-content:space-between;align-items:flex-start;gap:.5em;color:#c00}
+.fchip{border:.08em solid #555;border-radius:1em;padding:.2em .7em;background:#fff;min-height:2.2em;cursor:pointer}
+.fchip.on{background:#0E5F63;color:#fff;border-color:#0E5F63}
+.err{color:#b00020;font-weight:700}
+.foot{margin-top:1.2em;padding-top:.6em;border-top:.08em solid #bbb;display:flex;flex-wrap:wrap;gap:.4em 1em;font-size:.95em}
+.ad{background:#ffd54a;font-weight:700;padding:0 .3em;border-radius:.2em;font-size:.85em;margin-right:.3em;text-decoration:none;display:inline-block}
+.nt{border:.06em solid #1a4fa0;background:#fff;color:#1a4fa0;border-radius:.3em;padding:.15em .5em;min-height:2em;cursor:pointer;margin-top:.2em}
+.notsec{color:#b00020;font-weight:700}
+.tiny{font-size:.6em}
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:.3em;margin:.5em 0}
+.gal span{aspect-ratio:4/3;background:#c9d6cf;display:flex;align-items:center;justify-content:center;font-size:1.6em}
+.player{border:.1em solid #333;padding:.5em;display:flex;flex-wrap:wrap;gap:.4em;align-items:center;background:#fafafa;margin:.5em 0}
+.ordlist{margin:.3em 0 .5em;padding-left:1.4em}
+.tfrow{border:.08em solid var(--line);padding:.4em .5em;margin:.4em 0}
+.oic{display:inline-flex;margin-right:.45em;vertical-align:middle}.oic svg{width:1.7em;height:1.7em}
+.thtag{display:inline-block;background:#fdf3e0;color:#7a4a00;border:.06em solid #c07a12;border-radius:.3em;padding:0 .35em;font-weight:700;margin-right:.3em}
+.hero{padding:1em;color:#fff;margin:-.7em -.7em .7em}
+@media (max-width:640px){.cols{grid-template-columns:1fr}}
+.stage>*{min-width:0}.opt .ot,.blank,.chip,.qt,.ask,.addr{overflow-wrap:anywhere}
+@media (max-width:640px){.top .ttl{display:none}.top{justify-content:space-between;gap:.15rem;padding:.25rem .3rem;flex-wrap:nowrap}.top .tb{min-width:1.8rem;padding:0 .3rem}.top .pill{padding:.1rem .35rem}.addr{white-space:normal;word-break:break-all;border-radius:.6em;line-height:1.25}.bar2 .nbtn[aria-label=Forward]{display:none}.saved .w{display:none}.bot .tip{display:none}.bot{justify-content:flex-end}}
+@media (max-width:640px){.top,.bot{font-size:min(1rem,26px)}.top .tb,.top .pill,.bot .btn{font-size:inherit}.desk{font-size:min(.72rem,19px)}.addr{word-break:normal}}
+.secbar .T{min-width:0;overflow-wrap:anywhere}.nb .bx,.tile .tx,.card{min-width:0;overflow-wrap:anywhere}
+@media (max-width:640px){.top .tb{min-width:2.2em;min-height:2.2em;padding:0 .35em;border-radius:.2em}.bot .btn{min-height:2.2em;padding:.2em .6em}}
+@media (max-width:400px){.top{font-size:min(1rem,21px);gap:3px;padding:4px 5px}.sizes{gap:3px}}
+.toast{pointer-events:none}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="tb" data-act="menu">Menu</button>
+  <span class="ttl" id="ttl">Internet missions</span>
+  <span class="pill" id="count"></span>
+  <span class="sizes" role="group" aria-label="Text size"><button class="tb" data-act="size-" aria-label="Smaller text">A&minus;</button><button class="tb" data-act="size+" aria-label="Bigger text">A+</button></span>
+  <span class="saved" id="saved">&#10003;<span class="w"> Saved</span></span>
+</header>
+<div class="prog"><i id="prog"></i></div>
+<main class="wrap">
+  <div id="warn"></div>
+  <section id="menu"></section>
+  <section id="stage" class="stage" hidden>
+    <div id="guide"></div>
+    <section class="desk" aria-label="Practice computer desktop">
+      <div class="wall">
+        <div class="icons">
+          <button class="dicon" data-evt="open:bin"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 14h20l-2 28H16z" fill="#e9eef2" stroke="#4a5560" stroke-width="2"/><path d="M11 14h26M20 9h8v5h-8z" stroke="#4a5560" stroke-width="2" fill="none"/><path d="M20 20v16M24 20v16M28 20v16" stroke="#8a97a3" stroke-width="2"/></svg><span>Recycle Bin</span></button>
+          <button class="dicon" data-evt="open:notepad"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="6" width="30" height="38" rx="2" fill="#fff" stroke="#4a5560" stroke-width="2"/><rect x="9" y="6" width="30" height="7" fill="#5aa0d8"/><path d="M14 20h20M14 26h20M14 32h14" stroke="#8a97a3" stroke-width="2"/></svg><span>Notepad</span></button>
+          <button class="dicon" data-evt="open:photos"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="3" fill="#2f6fb0"/><circle cx="16" cy="19" r="4" fill="#ffd54a"/><path d="M5 35l12-12 9 9 6-6 11 11v2H5z" fill="#9fd3ff"/></svg><span>Photos</span></button>
+          <button class="dicon" data-evt="open:browser"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#2e7d32"/><path d="M24 3a21 21 0 0 1 18.2 10.5H24z" fill="#d93025"/><path d="M42.2 13.5A21 21 0 0 1 24 45l9-15.5z" fill="#f9ab00"/><circle cx="24" cy="24" r="9" fill="#fff"/><circle cx="24" cy="24" r="6.5" fill="#1a73e8"/></svg><span>Google Chrome</span></button>
+          <button class="dicon" data-evt="open:calc"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="4" width="28" height="40" rx="3" fill="#3a3f45"/><rect x="14" y="8" width="20" height="9" fill="#cfe8d4"/><g fill="#e6e6e6"><rect x="14" y="21" width="5" height="5"/><rect x="21.5" y="21" width="5" height="5"/><rect x="29" y="21" width="5" height="5"/><rect x="14" y="29" width="5" height="5"/><rect x="21.5" y="29" width="5" height="5"/><rect x="29" y="29" width="5" height="12" fill="#f39c12"/><rect x="14" y="36" width="12.5" height="5"/></g></svg><span>Calculator</span></button>
+        </div>
+        <div class="win" id="win-browser" hidden role="dialog" aria-label="Google Chrome">
+          <div class="tabs" id="tabs"></div>
+          <div class="bar2">
+            <button class="nbtn" data-act="bback" aria-label="Back">&larr;</button>
+            <button class="nbtn" disabled aria-label="Forward">&rarr;</button>
+            <button class="nbtn" data-act="refresh" aria-label="Reload">&#8635;</button>
+            <button class="addr" id="addr" data-act="addr" aria-label="Address bar"></button>
+            <span class="zm"><button class="nbtn" data-act="zoom-" aria-label="Zoom out">&minus;</button><span id="zl">100%</span><button class="nbtn" data-act="zoom+" aria-label="Zoom in">+</button></span>
+          </div>
+          <div class="bmbar" id="bmbar"></div>
+          <div class="wbody" id="bwrap"><div id="atray"></div><div id="bcontent"></div><div id="popslot"></div><div id="modalslot"></div></div>
+        </div>
+        <div class="win sm" id="win-notepad" hidden><div class="wtitle"><span>Untitled - Notepad</span><button class="xbtn" data-act="close-win" aria-label="Close Notepad">X</button></div><div class="wbody"><p>Notepad is for typing short notes.</p><p>You do not need it for this task. Close it with the X.</p></div></div>
+        <div class="win sm" id="win-photos" hidden><div class="wtitle"><span>Photos</span><button class="xbtn" data-act="close-win" aria-label="Close Photos">X</button></div><div class="wbody"><div class="photos"><span></span><span></span><span></span><span></span><span></span><span></span></div><p>Photos shows your pictures. You do not need it for this task. Close it with the X.</p></div></div>
+        <div class="win sm" id="win-calc" hidden><div class="wtitle"><span>Calculator</span><button class="xbtn" data-act="close-win" aria-label="Close Calculator">X</button></div><div class="wbody"><div class="calc"><span style="grid-column:1/5;text-align:right;padding-right:.5em">0</span><span>7</span><span>8</span><span>9</span><span>+</span><span>4</span><span>5</span><span>6</span><span>-</span><span>1</span><span>2</span><span>3</span><span>=</span></div><p>Calculator is for numbers. You do not need it for this task. Close it with the X.</p></div></div>
+        <div class="win sm" id="win-bin" hidden><div class="wtitle"><span>Recycle Bin</span><button class="xbtn" data-act="close-win" aria-label="Close Recycle Bin">X</button></div><div class="wbody"><p>The Recycle Bin is empty.</p><p>It keeps files you delete. You do not need it for this task. Close it with the X.</p></div></div>
+        <div class="toast" id="toast" hidden></div>
+      </div>
+      <div class="taskbar">
+        <span class="start" aria-hidden="true">&#9638;</span>
+        <span id="tbtns" style="display:flex;gap:.3em;flex-wrap:wrap"></span>
+        <span class="clock" id="clock"></span>
+      </div>
+    </section>
+  </section>
+  <section id="done" hidden></section>
+</main>
+<nav class="bot" id="bot" hidden>
+  <span class="tip" id="tip"></span>
+  <button class="btn alt" data-act="back">Back</button>
+  <button class="btn alt" data-act="skip" id="skipbtn" hidden>Skip this step</button>
+  <button class="btn" data-act="next" id="nextbtn">Next</button>
+</nav>
+<script>
+(function(){
+'use strict';
+var KEY='vu23560_internet_missions_v1';
+var WRONG_ICON={
+ 'open:bin':'That is the Recycle Bin. It keeps deleted files. Close it with the X.',
+ 'open:notepad':'That is Notepad. It is for typing notes. Close it with the X.',
+ 'open:photos':'That is Photos. It shows pictures. Close it with the X.',
+ 'open:calc':'That is Calculator. It is for numbers. Close it with the X.'
+};
+var BAD_SEARCH='The search did not find it. Check that you typed the important words.';
+var BOOKMARKS=[{t:'Harbour Link Buses',go:'bus/home',evt:'bm:bus'},{t:'News',go:'misc/news',evt:'bm:news'},{t:'Learning Hub',go:'learn/home',evt:'bm:learn'},{t:'Recipes',go:'misc/recipes',evt:'bm:recipes'}];
+var AUDIO={
+ pod:'Hello and welcome to Easy English Talk. Today I am talking to Jason. Jason moved to Lane Cove last month. Jason, do you like it? Yes, I love it. It is quiet and green. The shops on Longueville Road are great. Is it easy to get to the city? Yes. I take the bus. It takes about thirty minutes. What is hard? Parking. It is hard to find a car park near my flat.',
+ bike:'Welcome to Blues Point Bikes. Hiring a bike is easy. First, choose your bike at the front counter. Then, show us your photo ID. Next, pay for the time you want. Finally, put on your free helmet and enjoy the ride.',
+ market:'Welcome to the Artarmon Sunday Market. The fruit and vegetable stalls are next to the playground. The coffee cart is near the car park. The bread stall is under the big tree. And the plant stall is next to the toilets. Enjoy your morning.'
+};
+var MISSIONS=[
+{id:'swim',icon:'&#127946;',title:'Swim on Sunday',place:'St Leonards',blurb:'Find the opening hours and prices of a pool.',start:'closed',site:'swim',
+ search:{tiles:['St','Leonards','Leonard','swim','swimm','centre','center'],q:['St','Leonards','swim','centre'],need:[['swim','leonards']],fix:{leonard:'leonards',swimm:'swim',center:'centre'},results:[
+  {t:'Swimwear sale | Huge discounts',u:'swimwear-deals.example',ad:1,evt:'res:ad'},
+  {t:'St Leonards Swim Centre | Pool, lessons and prices',u:'stleonardsswim.example',go:'swim/home'},
+  {t:'Swimming at home: our blog',u:'homeswim-blog.example',evt:'res:blog'}]},
+ tasks:[
+ {type:'act',title:'Find the pool website',ask:'Open Chrome. Search for St Leonards swim centre. Then open the swim centre website.',hint:'Tap the word tiles to type. In Australia, centre ends in r-e.',expect:['arrive:swim'],wrong:{'search:bad':BAD_SEARCH,'res:ad':'That result says Ad. It is an advert, not the swim centre.','res:blog':'That is a blog about swimming at home. Look for the swim centre name.'},why:'Read each result before you open it. Adverts are often at the top.'},
+ {type:'act',title:'Close the cookie box',ask:'A box about cookies covers the bottom of the page. Choose one button to close it.',hint:'Both buttons close the box. Only needed cookies shares less information.',expect:['cookie:needed','cookie:all'],why:'Cookies are small files a website saves. Only needed cookies shares less of your information.'},
+ {type:'pick',title:'Sunday hours',ask:'Use the menu on the left of the website. What time does the pool close on Sunday?',hint:'Open the Opening hours page. Find the Sunday row.',opts:[{t:'6 pm',ok:1,why:'Yes. On Sunday the pool is open from 7 am to 6 pm.'},{t:'8 pm',ok:0,why:'8 pm is the closing time from Monday to Friday.'},{t:'7 am',ok:0,why:'7 am is when the pool opens on Sunday.'},{t:'7 pm',ok:0,why:'7 pm is the closing time on Saturday.'}],why:'Find the row first. Then read across the table.'},
+ {type:'pick',title:'Adult price',ask:'How much is one swim for an adult?',hint:'Open the Prices page.',opts:[{t:'$7.50',ok:1,why:'Yes. One adult swim is $7.50.'},{t:'$5.50',ok:0,why:'$5.50 is the concession price.'},{t:'$5.00',ok:0,why:'$5.00 is the price for a child.'},{t:'$65.00',ok:0,why:'$65.00 is for ten adult swims, not one.'}],why:'Read the whole line. Some prices are for one swim. Some are for ten.'}
+ ]},
+{id:'bus',icon:'&#128652;',title:'Catch the bus',place:'St Leonards to Neutral Bay',blurb:'Read a bus timetable on a website.',start:'closed',site:'bus',
+ search:{tiles:['Harbour','Link','Buses','bus','timetable'],q:['Harbour','Link','Buses'],need:[['harbour','link'],['bus','timetable']],fix:{},results:[
+  {t:'Harbour Link Buses | Timetables and trips',u:'harbourlinkbuses.example',go:'bus/home'},
+  {t:'Toy buses for children',u:'toy-bus-shop.example',ad:1,evt:'res:ad'}]},
+ tasks:[
+ {type:'act',title:'Use a bookmark',ask:'Open Chrome. Go to the Harbour Link Buses website. The quick way is the bookmark under the address bar.',hint:'A bookmark is a saved website. Tap it once. You can also search for it.',expect:['arrive:bus'],wrong:{'bm:news':'That bookmark opens the news. Find the bus bookmark.','bm:recipes':'That bookmark opens recipes. Find the bus bookmark.','bm:learn':'That bookmark opens a learning website. Find the bus bookmark.','search:bad':BAD_SEARCH,'res:ad':'That is an advert for toys.'},why:'Bookmarks save time. You do not need to search for websites you use often.'},
+ {type:'act',title:'Open the timetable',ask:'Open the timetable for Route L22.',hint:'Each route has its own button.',expect:['page:bus:l22'],wrong:{'page:bus:l30':'That is Route L30 to Lane Cove. Go back and open Route L22.'},why:'Check the route number before you read a timetable.'},
+ {type:'pick',title:'The next bus',ask:'It is Tuesday. You are at St Leonards Station at 8:05 am. When is the next bus?',hint:'Tuesday is a weekday. Read the St Leonards Station row.',opts:[{t:'8:10 am',ok:1,why:'Yes. The 7:50 bus is gone. The next one is at 8:10 am.'},{t:'7:50 am',ok:0,why:'That bus left before 8:05 am.'},{t:'8:15 am',ok:0,why:'8:15 am is the time at Crows Nest, not St Leonards Station.'},{t:'8:30 am',ok:0,why:'There is an earlier bus. Look again.'}],why:'Read the row for your stop. Then find the first time after now.'},
+ {type:'pick',title:'Saturday buses',ask:'It is Saturday. When is the first bus from St Leonards Station?',hint:'The timetable has tabs. Open the Saturday tab.',opts:[{t:'8:30 am',ok:1,why:'Yes. On Saturday the first bus leaves at 8:30 am.'},{t:'7:50 am',ok:0,why:'That is the first weekday bus.'},{t:'9:15 am',ok:0,why:'That is the first Sunday bus.'},{t:'8:35 am',ok:0,why:'That is the time at Crows Nest.'}],why:'Timetables often change on weekends. Check the right day.'},
+ {type:'pick',title:'Trip time',ask:'On a weekday, how long is the trip from St Leonards Station to Neutral Bay?',hint:'Compare the time at St Leonards Station with the time at Neutral Bay.',opts:[{t:'22 minutes',ok:1,why:'Yes. 7:50 am to 8:12 am is 22 minutes.'},{t:'5 minutes',ok:0,why:'5 minutes is the trip to Crows Nest.'},{t:'45 minutes',ok:0,why:'That is too long. Look at the times again.'},{t:'12 minutes',ok:0,why:'Count from 7:50 am to 8:12 am again.'}],why:'You can work out a trip time from the table.'}
+ ]},
+{id:'lib',icon:'&#128218;',title:'A free English group',place:'Crows Nest',blurb:'Type a web address and book a free place.',start:'findit',site:'lib',
+ addr:{tiles:['www.','crowsnest','crowsnets','library','libary','.example','.exmaple'],ok:['www.crowsnestlibrary.example','crowsnestlibrary.example']},
+ tasks:[
+ {type:'act',title:'Type a web address',ask:'Chrome is open. Tap the address bar at the top. Type crowsnestlibrary.example. Then tap Go.',hint:'Some tiles have spelling mistakes. Check each part before you tap Go.',expect:['arrive:lib'],wrong:{'addr:bad':'This site cannot be reached. Check the spelling of each part.'},why:'When you know the address, you can type it in the address bar. You do not need to search.'},
+ {type:'pick',title:'Find the day',ask:'Find the English conversation group. What day is it on?',hint:'Look for a link in the text, or the links at the bottom of the page.',opts:[{t:'Wednesday',ok:1,why:'Yes. The group meets on Wednesday at 10 am.'},{t:'Friday',ok:0,why:'Friday is Storytime for children.'},{t:'Saturday',ok:0,why:'Saturday is Computer help.'},{t:'Monday',ok:0,why:'The library is closed on Monday.'}],why:'Links can be inside the text, not only in a menu.'},
+ {type:'act',title:'Book a place',ask:'Book one free place for the group on Wednesday 5 November.',hint:'Tap Book a free place. Choose the number of people and the date. Then tap Confirm.',expect:['book:ok'],wrong:{'book:bad':'Check your booking. You need 1 person on Wednesday 5 November. Tap Change my booking.'},why:'Always check the details before you confirm a booking.'},
+ {type:'pick',title:'What to bring',ask:'What do you need to bring to the group?',hint:'Read the information about the group again.',opts:[{t:'Your library card',ok:1,why:'Yes. The page says: bring your library card.'},{t:'A laptop',ok:0,why:'The page does not ask for a laptop.'},{t:'$5',ok:0,why:'The group is free.'},{t:'A photo',ok:0,why:'The page does not ask for a photo.'}],why:'Read all the information before you go.'}
+ ]},
+{id:'wx',icon:'&#127780;',title:'Weekend weather',place:'St Leonards',blurb:'Check the weather and stay safe from a fake warning.',start:'closed',site:'wx',
+ search:{tiles:['weather','wether','St','Leonards','Leonard'],q:['weather','St','Leonards'],need:[['weather','leonards']],fix:{wether:'weather',leonard:'leonards'},results:[
+  {t:'Weather balloons for parties',u:'party-balloons.example',evt:'res:balloons'},
+  {t:'SkyCheck Weather | St Leonards forecast',u:'skycheck.example',go:'wx/home'}]},
+ tasks:[
+ {type:'act',title:'Find the weather',ask:'Open Chrome. Search for weather St Leonards. Open the weather website.',hint:'Weather is spelt w-e-a-t-h-e-r.',expect:['arrive:wx'],wrong:{'search:bad':BAD_SEARCH,'res:balloons':'That website sells balloons. Look for the forecast.'},why:'Choose the result that matches what you need.'},
+ {type:'act',title:'A fake warning',ask:'A red box says your computer has viruses. Deal with it safely.',hint:'Do not tap the buttons inside the box. Close the box, or close the tab.',expect:['virus:close','close:browser','tabclose:other'],wrong:{'virus:call':'Stop. Never call a number from a pop-up. This is a trick. Close it with the X.','virus:scan':'Stop. Do not tap buttons in this box. It is a trick. Close it with the X.'},why:'Real virus warnings do not ask you to call or pay. Close the box or the tab. Tell your teacher or a family member.'},
+ {type:'pick',title:'Saturday weather',ask:'What will the top temperature be on Saturday?',hint:'Today is at the top. Tap Show the next 7 days.',opts:[{t:'31 degrees',ok:1,why:'Yes. Saturday will be sunny and 31 degrees.'},{t:'18 degrees',ok:0,why:'18 degrees is the lowest temperature on Saturday.'},{t:'22 degrees',ok:0,why:'22 degrees is the top temperature on Sunday.'},{t:'27 degrees',ok:0,why:'27 degrees is the top temperature on Friday.'}],why:'A forecast shows a top and a low temperature for each day.'},
+ {type:'multi',need:'all',title:'Rainy days',ask:'Which days will have rain? Pick all of them. Then tap Check.',hint:'Look for the rain picture and the words showers or rain.',opts:[{t:'Sunday',ok:1},{t:'Monday',ok:1},{t:'Saturday',ok:0},{t:'Thursday',ok:0},{t:'Wednesday',ok:0}],badMsg:'Look again. Pick every day with rain or showers, and only those days.',why:'Pictures and words both give information on a forecast.'}
+ ]},
+{id:'cafe',icon:'&#9749;',title:'Compare two cafes',place:'St Leonards and Crows Nest',blurb:'Use two tabs to compare websites.',start:'findit',site:'cafe1',sites:['cafe1','cafe2'],
+ search:{tiles:['cafes','caffes','near','nere','me'],q:['cafes','near','me'],need:[['cafes']],fix:{caffes:'cafes',nere:'near'},results:[
+  {t:'Herbert Street Cafe | St Leonards',u:'herbertstcafe.example',go:'cafe1/home',newtab:1,evt:'res:same'},
+  {t:'Coffee machines for sale',u:'coffee-machines-cheap.example',ad:1,evt:'res:ad'},
+  {t:'Falcon Street Kitchen | Crows Nest',u:'falconstkitchen.example',go:'cafe2/home',newtab:1,evt:'res:same'}]},
+ tasks:[
+ {type:'act',title:'Open two tabs',ask:'Chrome is open. Search for cafes near me. Open both cafe websites, each in its own tab.',hint:'Use Open in new tab, or the + button at the top. Tabs appear next to each other at the top.',expect:['tabs:cafes'],info:{'res:same':'That opened in the same tab. That is OK. Now open the other cafe in a new tab.'},wrong:{'search:bad':BAD_SEARCH,'res:ad':'That is an advert. It is not a cafe.'},why:'Tabs let you keep two websites open. You can compare them quickly.'},
+ {type:'pick',scene:'cafes',title:'Compare prices',ask:'Look at both cafe tabs. Which cafe has the cheaper flat white?',hint:'Tap each tab at the top. Find the price of a flat white on each website.',opts:[{t:'Herbert Street Cafe',ok:1,why:'Yes. It is $4.80 there and $5.20 at Falcon Street Kitchen.'},{t:'Falcon Street Kitchen',ok:0,why:'Falcon Street Kitchen charges $5.20. The other cafe is cheaper.'},{t:'They are the same price',ok:0,why:'The prices are different. Check both tabs again.'},{t:'The websites do not show prices',ok:0,why:'Both websites show prices. Look at the menu on each tab.'}],why:'Switching tabs is faster than searching again.'},
+ {type:'pick',scene:'cafes',title:'Open on Monday',ask:'You want breakfast on Monday. Which cafe is open on Monday?',hint:'Find the opening hours on each website.',opts:[{t:'Falcon Street Kitchen',ok:1,why:'Yes. It is open every day.'},{t:'Herbert Street Cafe',ok:0,why:'Herbert Street Cafe is open Tuesday to Sunday. It is closed on Monday.'},{t:'Both cafes',ok:0,why:'One cafe is closed on Monday. Check the hours again.'},{t:'Neither cafe',ok:0,why:'One cafe is open every day. Check the hours again.'}],why:'Check opening hours before you go.'},
+ {type:'act',scene:'cafes',title:'Close one tab',ask:'Close the Herbert Street Cafe tab. Keep the other tabs open.',hint:'Each tab has its own small X. The big X closes the whole browser.',expect:['tabclose:cafe1'],wrong:{'tabclose:cafe2':'You closed the Falcon Street Kitchen tab. Close the Herbert Street Cafe tab.','tabclose:other':'That tab is not the Herbert Street Cafe tab.','close:browser':'That closed the whole browser. I opened it again for you. Use the small X on one tab.'},why:'The X on a tab closes only that tab. The X at the far right closes everything.'}
+ ]},
+{id:'pod',icon:'&#127911;',title:'Listen to a podcast',place:'Lane Cove',blurb:'Make small words bigger and listen to a podcast.',start:'closed',site:'pod',
+ search:{tiles:['easy','eazy','English','podcast','podcats'],q:['easy','English','podcast'],need:[['english','podcast']],fix:{eazy:'easy',podcats:'podcast'},results:[
+  {t:'Easy English Talk | A podcast for learners',u:'easyenglishtalk.example',go:'pod/home'},
+  {t:'Microphones for podcasts',u:'mic-shop.example',ad:1,evt:'res:ad'}]},
+ tasks:[
+ {type:'act',title:'Find the podcast',ask:'Open Chrome. Search for easy English podcast. Open the podcast website.',hint:'Check the spelling of easy and podcast.',expect:['arrive:pod'],wrong:{'search:bad':BAD_SEARCH,'res:ad':'That is an advert for microphones.'},why:'A podcast is a recording you can listen to online.'},
+ {type:'act',title:'Make the page bigger',ask:'The words on this website are very small. Make the page bigger with the + button next to the address bar.',hint:'Tap + one or two times. The number shows the size.',expect:['zoom:125','zoom:150','zoom:175'],wrong:{'zoom:75':'That made the page smaller. Tap + instead.'},why:'Zoom makes a page bigger or smaller. It helps when words are small.'},
+ {type:'act',title:'Open an episode',ask:'Open the episode called Moving to Lane Cove.',hint:'The episodes are in a list. Read each title.',expect:['page:pod:ep1'],wrong:{'page:pod:ep2':'That is a different episode. Go back and find Moving to Lane Cove.'},why:'Read titles carefully before you play something.'},
+ {type:'tf',audio:'pod',title:'True or false',ask:'Play the episode on the website. Then tap True or False for each sentence.',hint:'Listen for the words quiet, bus and parking.',items:[{s:'Jason moved to Lane Cove last month.',ok:true,why:'True. Jason moved there last month.'},{s:'Jason thinks Lane Cove is noisy.',ok:false,why:'False. Jason says it is quiet and green.'},{s:'Jason goes to the city by train.',ok:false,why:'False. Jason takes the bus.'},{s:'The trip to the city takes about thirty minutes.',ok:true,why:'True. It takes about thirty minutes.'},{s:'Parking is easy near the flat.',ok:false,why:'False. Parking is hard.'}],why:'Listen for the key words. They help you decide true or false.'}
+ ]},
+{id:'med',icon:'&#129658;',title:'See a doctor',place:'Greenwich',blurb:'Use a dropdown menu and a list of questions.',start:'findit',site:'med',
+ search:{tiles:['doctor','docter','Greenwich','Grenwich'],q:['doctor','Greenwich'],need:[['doctor','greenwich']],fix:{docter:'doctor',grenwich:'greenwich'},results:[
+  {t:'Doctor Who fan club',u:'whofans.example',evt:'res:fan'},
+  {t:'Greenwich Road Medical Centre',u:'greenwichroadmedical.example',go:'med/home'}]},
+ tasks:[
+ {type:'act',title:'Find the medical centre',ask:'Chrome is open. Search for doctor Greenwich. Open the medical centre website.',hint:'Greenwich has a silent w. It is spelt G-r-e-e-n-w-i-c-h.',expect:['arrive:med'],wrong:{'search:bad':BAD_SEARCH,'res:fan':'That is a fan club for a TV show. Look for the medical centre.'},why:'Some names look the same. Read the result title carefully.'},
+ {type:'pick',title:'Sunday',ask:'Is the medical centre open on Sunday?',hint:'Tap Patients in the menu. A list opens. Then tap Opening hours.',opts:[{t:'No. It is closed on Sunday.',ok:1,why:'Yes. The page says Sunday: closed.'},{t:'Yes. From 8:30 am to 12:30 pm.',ok:0,why:'Those are the Saturday hours.'},{t:'Yes. From 8 am to 6 pm.',ok:0,why:'Those are the hours from Monday to Friday.'},{t:'Yes. From 9 am to 1 pm.',ok:0,why:'The page does not say this. Read the Sunday row.'}],why:'Some menus open a list. The page you need is inside the list.'},
+ {type:'pick',title:'Your first visit',ask:'What should you bring to your first visit?',hint:'Open Questions in the Patients menu. Tap a question to see the answer.',opts:[{t:'Your Medicare card and a list of your medicines',ok:1,why:'Yes. That is the answer to the question about the first visit.'},{t:'Your passport and a photo',ok:0,why:'The page does not ask for these.'},{t:'Nothing',ok:0,why:'The page asks you to bring two things.'},{t:'$100 cash',ok:0,why:'The page does not say this.'}],why:'Many websites put answers under questions. Tap a question to open it.'},
+ {type:'pick',title:'An interpreter',ask:'Can you get an interpreter?',hint:'Look for the question about your language.',opts:[{t:'Yes. Tell them when you book.',ok:1,why:'Yes. They can book a free phone interpreter.'},{t:'No. There is no interpreter.',ok:0,why:'Read the answer again. They can book one.'},{t:'Only on Saturday.',ok:0,why:'The answer does not say Saturday.'},{t:'Yes, but you must pay for it.',ok:0,why:'The answer says the phone interpreter is free.'}],why:'Free interpreters can help you at a doctor.'}
+ ]},
+{id:'bike',icon:'&#128690;',title:'Hire a bike',place:'McMahons Point',blurb:'Listen to a message and scroll a long page.',start:'findit',site:'bike',
+ search:{tiles:['bike','bik','hire','hier','McMahons','Point'],q:['bike','hire','McMahons','Point'],need:[['bike','mcmahons']],fix:{bik:'bike',hier:'hire'},results:[
+  {t:'Bike parts wholesale',u:'bikeparts-bulk.example',ad:1,evt:'res:ad'},
+  {t:'Blues Point Bikes | Bike hire in McMahons Point',u:'bluespointbikes.example',go:'bike/home'}]},
+ tasks:[
+ {type:'act',title:'Find the bike shop',ask:'Chrome is open. Search for bike hire McMahons Point. Open the bike hire website.',hint:'Hire is spelt h-i-r-e.',expect:['arrive:bike'],wrong:{'search:bad':BAD_SEARCH,'res:ad':'That is an advert for bike parts.'},why:'An advert can look like a real result. Look for the word Ad.'},
+ {type:'order',audio:'bike',title:'Put the steps in order',ask:'Play the message on the website. Then tap the steps in the right order.',hint:'Listen for First, Then, Next and Finally.',items:['Choose a bike','Show your photo ID','Pay for your time','Put on a helmet'],why:'First, then, next and finally tell you the order of steps.'},
+ {type:'pick',title:'Two hours',ask:'Scroll down to Prices. How much is a bike for two hours?',hint:'Prices is near the bottom of the page. Scroll down.',opts:[{t:'$25',ok:1,why:'Yes. Two hours costs $25.'},{t:'$30',ok:0,why:'Two hours is not two times one hour. Read the price list.'},{t:'$15',ok:0,why:'$15 is for one hour.'},{t:'$40',ok:0,why:'$40 is for half a day.'}],why:'Long pages need scrolling. Use Back to top to go up again.'}
+ ]},
+{id:'garden',icon:'&#127793;',title:'Join a garden',place:'Cammeray',blurb:'Choose a safe website and fill in a form.',start:'closed',site:'garden',
+ search:{tiles:['community','comunity','garden','gardin','Cammeray','Camerey'],q:['community','garden','Cammeray'],need:[['garden','cammeray']],fix:{comunity:'community',gardin:'garden',camerey:'cammeray'},results:[
+  {t:'FREE GARDEN TOOLS!!! YOU WON!!! CLICK NOW',u:'http://free-garden-prize.example',nolock:1,evt:'res:prize'},
+  {t:'Ernest Street Community Garden | Cammeray',u:'https://ernestgarden.example',lock:1,go:'garden/home'}]},
+ tasks:[
+ {type:'act',title:'Search',ask:'Open Chrome. Search for community garden Cammeray.',hint:'Community has two letter m. Cammeray has two letter m too.',expect:['search:ok'],wrong:{'search:bad':BAD_SEARCH},why:'Good spelling gives you better results.'},
+ {type:'pick',scene:'results',title:'Which is safe?',ask:'Look at the two results. Which one is safer to open?',hint:'Look for a padlock. Look for lots of capital letters and !!!',opts:[{t:'Ernest Street Community Garden',ok:1,why:'Yes. It has a padlock and a normal title.'},{t:'FREE GARDEN TOOLS!!! YOU WON!!!',ok:0,why:'No. Capital letters, !!! and a prize are warning signs. It says Not secure.'},{t:'Both are safe',ok:0,why:'No. One result shows warning signs.'},{t:'Neither one is safe',ok:0,why:'No. One result has a padlock and a normal title.'}],why:'A padlock means the connection is private. Prizes and !!! are warning signs.'},
+ {type:'act',scene:'results',title:'Open the safe website',ask:'Open the safe garden website.',hint:'Choose the result with the padlock.',expect:['arrive:garden'],wrong:{'res:prize':'Stop. That result is not safe. Open the other one.'},why:'Only open websites you trust.'},
+ {type:'act',title:'Fill in a form',ask:'Join the garden. Choose a small plot on Saturday mornings. Tick the rules box. Then tap Send.',hint:'Tap Join the garden. Read the error message if one appears.',expect:['form:ok'],wrong:{'form:notick':'The website shows an error in red. Read it and fix it.','form:bad':'Check your choices. You need a small plot on Saturday mornings.'},why:'Forms show errors in red. Read the error, fix it and send again.'}
+ ]},
+{id:'market',icon:'&#129365;',title:'A Sunday market',place:'Artarmon',blurb:'Listen to a guide and find where things are.',start:'closed',site:'market',
+ search:{tiles:['Artarmon','Sunday','Sundy','market','markit'],q:['Artarmon','Sunday','market'],need:[['artarmon','market']],fix:{sundy:'sunday',markit:'market'},results:[
+  {t:'Stock market news today',u:'money-today.example',evt:'res:stock'},
+  {t:'Artarmon Sunday Market | Fresh food and plants',u:'artarmonmarket.example',go:'market/home'}]},
+ tasks:[
+ {type:'act',title:'Find the market',ask:'Open Chrome. Search for Artarmon Sunday market. Open the market website.',hint:'Type the important words: the suburb and market.',expect:['arrive:market'],wrong:{'search:bad':BAD_SEARCH,'res:stock':'That is about money and shares, not a market with stalls.'},why:'The same word can mean different things. Read the result title.'},
+ {type:'match',audio:'market',title:'Where is each stall?',ask:'Play the market guide on the website. Then choose where each stall is.',hint:'Listen for next to, near and under.',items:[{q:'Fruit and vegetables',ans:'next to the playground'},{q:'The coffee cart',ans:'near the car park'},{q:'Bread',ans:'under the big tree'},{q:'Plants',ans:'next to the toilets'}],choices:['next to the playground','near the car park','under the big tree','next to the toilets'],why:'Next to, near and under tell you where things are.'},
+ {type:'pick',title:'Getting there',ask:'How can you get to the market by train?',hint:'Look at the links at the bottom of the page.',opts:[{t:'Walk 5 minutes from Artarmon Station',ok:1,why:'Yes. The Getting here page says this.'},{t:'Get off at St Leonards Station',ok:0,why:'The page says Artarmon Station.'},{t:'There is no train',ok:0,why:'There is a train. Read the Getting here page.'},{t:'Take the ferry from Milsons Point',ok:0,why:'The page does not talk about a ferry.'}],why:'Links at the bottom of a page often have useful information.'},
+ {type:'pick',title:'Opening time',ask:'What time does the market open?',hint:'Look at the top of the home page.',opts:[{t:'8 am',ok:1,why:'Yes. It is open every Sunday from 8 am to 1 pm.'},{t:'1 pm',ok:0,why:'1 pm is when the market closes.'},{t:'10 am',ok:0,why:'Read the times again.'},{t:'7 am',ok:0,why:'Read the times again.'}],why:'Opening times are usually near the top of the home page.'}
+ ]},
+{id:'learn',icon:'&#127979;',title:'Find an English class',place:'Neutral Bay',blurb:'Use filters to find the right class.',start:'closed',site:'learn',
+ search:{tiles:['Learning','Hub','Neutral','Bay','English','classes'],q:['Learning','Hub','Neutral','Bay'],need:[['learning','hub'],['english','classes']],fix:{},results:[
+  {t:'Lower North Shore Learning Hub | Classes for adults',u:'lnslearninghub.example',go:'learn/home'},
+  {t:'Hub caps for cars',u:'hubcaps-direct.example',ad:1,evt:'res:ad'}]},
+ tasks:[
+ {type:'act',title:'Open the website',ask:'Open Chrome. Go to the Learning Hub website. The quick way is the bookmark under the address bar.',hint:'Bookmarks are under the address bar. You can also search for it.',expect:['arrive:learn'],wrong:{'bm:news':'That bookmark opens the news.','bm:recipes':'That bookmark opens recipes.','bm:bus':'That bookmark opens the bus website.','search:bad':BAD_SEARCH,'res:ad':'That is an advert for car parts.'},why:'Bookmarks open websites you use often. Searching works too.'},
+ {type:'act',title:'Open the class list',ask:'Open the Find a class page.',hint:'Look at the menu at the top of the website.',expect:['page:learn:classes'],wrong:{'page:learn:about':'That is the About page. Find the class list.'},why:'Menu names tell you what is on each page.'},
+ {type:'pick',title:'Use the filters',ask:'You want a Level 2 class on a Tuesday evening. Which class is it?',hint:'Tap Tuesday, Evening and Level 2 in the filters.',opts:[{t:'English for everyday life',ok:1,why:'Yes. It is on Tuesday at 6 pm. It is Level 2.'},{t:'Computer basics',ok:0,why:'That class is on Tuesday morning.'},{t:'Talking with confidence',ok:0,why:'That class is on Thursday.'},{t:'Writing emails',ok:0,why:'That class is Level 3.'}],why:'Filters make a long list shorter. They show only what you need.'},
+ {type:'pick',title:'Read the details',ask:'Open the class English for everyday life. Which sentence is true?',hint:'Read the sentence with the word but.',opts:[{t:'It is free, but you need to book.',ok:1,why:'Yes. But shows one more thing: you need to book a place.'},{t:'It is free, so you do not need to book.',ok:0,why:'The page says you need to book.'},{t:'It costs money, and you do not need to book.',ok:0,why:'The class is free. You need to book.'},{t:'You need to bring a laptop.',ok:0,why:'You need a pen and a notebook.'}],why:'And adds more. But shows a difference. Both words help you understand.'}
+ ]}
+];
+var SKILLS=['Open Chrome and use a bookmark','Search with the right spelling','Type a web address','Spot adverts in search results','Open, switch and close tabs','Use side menus, dropdown menus and page tabs','Use links in the text and at the bottom of a page','Zoom in when words are small','Scroll a long page','Read tables, forecasts and lists','Use filters and open questions','Fill in a form and fix an error','Book a place online','Close cookie boxes and fake warnings safely','Choose a safe website','Listen and answer: true or false, order, where things are','Understand and and but'];
+/* ---------- Think about it: knowledge and speaking at the end of each mission ---------- */
+var ICONS={
+ chrome:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#2e7d32"/><path d="M24 3a21 21 0 0 1 18.2 10.5H24z" fill="#d93025"/><path d="M42.2 13.5A21 21 0 0 1 24 45l9-15.5z" fill="#f9ab00"/><circle cx="24" cy="24" r="9" fill="#fff"/><circle cx="24" cy="24" r="6.5" fill="#1a73e8"/></svg>',
+ edge:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#0c59a4"/><path d="M6 28c2-12 14-19 25-15 8 3 11 11 7 16-3 4-10 4-13 0 5 1 8-2 7-5-2-6-14-7-20 0-3 3-4 7-3 11C7 33 6 31 6 28z" fill="#3bd16f"/></svg>',
+ safari:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#e8f2fd" stroke="#1e88e5" stroke-width="3"/><path d="M33 15l-6 12-12 6 6-12z" fill="#e53935"/><path d="M15 33l6-12 6 6z" fill="#fff" stroke="#999"/></svg>',
+ firefox:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#6a2bd6"/><path d="M6 24c0-9 6-16 13-18-2 4-1 8 3 9 6 1 9 5 9 9 0 6-5 10-11 10-5 0-9-3-10-7 3 3 8 3 10 0-6 1-10-1-11-6 4 2 7 1 8-1-6 0-9-3-9-6 2 2 4 2 5 1C9 16 6 19 6 24z" fill="#ff9500"/></svg>',
+ notepad:'<svg viewBox="0 0 48 48"><rect x="9" y="6" width="30" height="38" rx="2" fill="#fff" stroke="#4a5560" stroke-width="2"/><rect x="9" y="6" width="30" height="7" fill="#5aa0d8"/><path d="M14 20h20M14 26h20M14 32h14" stroke="#8a97a3" stroke-width="2"/></svg>',
+ calc:'<svg viewBox="0 0 48 48"><rect x="10" y="4" width="28" height="40" rx="3" fill="#3a3f45"/><rect x="14" y="8" width="20" height="9" fill="#cfe8d4"/><g fill="#e6e6e6"><rect x="14" y="21" width="5" height="5"/><rect x="21.5" y="21" width="5" height="5"/><rect x="29" y="21" width="5" height="5"/><rect x="14" y="29" width="5" height="5"/><rect x="21.5" y="29" width="5" height="5"/></g></svg>',
+ photos:'<svg viewBox="0 0 48 48"><rect x="5" y="9" width="38" height="30" rx="3" fill="#2f6fb0"/><circle cx="16" cy="19" r="4" fill="#ffd54a"/><path d="M5 35l12-12 9 9 6-6 11 11v2H5z" fill="#9fd3ff"/></svg>'
+};
+var THINK={
+ swim:[
+  {type:'multi',title:'What is this website for?',ask:'What can you do on the swim centre website? Pick all. Then tap Check.',hint:'Think about the pages in the menu.',opts:[{t:'Check the opening hours',ok:1},{t:'Find the prices',ok:1},{t:'Read about lessons',ok:1},{t:'Buy a car',ok:0},{t:'Send a text message',ok:0}],need:'all',badMsg:'Look again. Pick everything the website helps you do, and nothing else.',why:'A website is for a purpose. This one helps you plan a swim.'},
+  {type:'pick',title:'Computer words: menu',ask:'The links on the left of this website are a menu. On a website, what is a menu?',hint:'Think about what happened when you tapped the words on the left.',opts:[{t:'A list of links to other pages',ok:1,why:'Yes. A website menu takes you to other pages.'},{t:'A list of food',ok:0,why:'That is a menu in a cafe. On a website, a menu is a list of links.'},{t:'The address of the website',ok:0,why:'The address is in the address bar at the top.'},{t:'A picture of the pool',ok:0,why:'A menu is words you can tap, not a picture.'}],why:'Menus help you move around a website.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner: What can you do on a pool website? Say two things. Then tap Show a model answer.',hint:'Start with: You can ...',model:['You can check the opening hours.','You can find the prices.','You can read about swimming lessons.'],why:'Saying full sentences helps you answer questions about websites.'}],
+ bus:[
+  {type:'multi',title:'What is this website for?',ask:'What else could you do on a bus website? Pick all. Then tap Check.',hint:'Think about buses and travel.',opts:[{t:'Check the timetable',ok:1},{t:'Plan a trip',ok:1},{t:'Find a bus stop',ok:1},{t:'Cook dinner',ok:0},{t:'Fix the bus',ok:0}],need:'all',badMsg:'Look again. Pick only the things you can do on a website.',why:'Transport websites help you plan trips before you leave home.'},
+  {type:'pick',title:'Computer words: bookmarks',ask:'Where are the bookmarks in Chrome?',hint:'Look at the browser on the computer screen.',opts:[{t:'Under the address bar',ok:1,why:'Yes. The bookmarks are under the address bar.'},{t:'At the bottom of the screen',ok:0,why:'That is the taskbar. It shows open programs.'},{t:'Inside the website',ok:0,why:'Bookmarks belong to the browser, not the website.'},{t:'On the desktop',ok:0,why:'The desktop has icons, not bookmarks.'}],why:'Words like under, at the top and next to help you find things on a screen.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner how you opened the bus website. Then tap Show a model answer.',hint:'Start with: I opened ...',model:['I opened Chrome.','I tapped the bookmark under the address bar.','Then I opened the timetable for Route L22.'],why:'Explaining steps in order is a useful skill.'}],
+ lib:[
+  {type:'pick',title:'Who would use this website?',ask:'Who would use the library website?',hint:'Think about everything on the website: events, hours and bookings.',opts:[{t:'People who live near Crows Nest',ok:1,why:'Yes. Local people use it to find events, hours and bookings.'},{t:'Only children',ok:0,why:'Children use it for Storytime, but adults use it too.'},{t:'Only bus drivers',ok:0,why:'The website is for anyone who uses the library.'},{t:'Only people in another country',ok:0,why:'It is a local library. Local people use it most.'}],why:'Think about who needs the information on a website.'},
+  {type:'pick',title:'Computer words: address bar',ask:'You typed in the address bar. What goes in the address bar?',hint:'Think about what you typed.',opts:[{t:'The web address',ok:1,why:'Yes. The web address goes in the address bar.'},{t:'Your email password',ok:0,why:'Never type a password in the address bar.'},{t:'The bookmarks',ok:0,why:'Bookmarks are under the address bar.'},{t:'The time',ok:0,why:'The time is on the taskbar at the bottom.'}],why:'The address bar shows where you are on the internet.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner how to open a website when you know its address. Then tap Show a model answer.',hint:'Use three steps.',model:['Tap the address bar.','Type the address.','Tap Go.'],why:'Simple steps are easy to follow and easy to remember.'}],
+ wx:[
+  {type:'multi',title:'Types of information',ask:'What kinds of information are on the weather website? Pick all. Then tap Check.',hint:'Think about the forecast table.',opts:[{t:'Temperatures',ok:1},{t:'Rain',ok:1},{t:'Sunny or cloudy days',ok:1},{t:'Bus times',ok:0},{t:'Doctor appointments',ok:0}],need:'all',badMsg:'Look again. Pick only the information on the weather website.',why:'Different websites give different kinds of information.'},
+  {type:'pick',title:'Stay safe',ask:'A pop-up says your computer has a virus. What should you do?',hint:'Think about the red box.',opts:[{t:'Close it with the X and tell someone',ok:1,why:'Yes. Close it. Then tell your teacher or a family member.'},{t:'Call the number',ok:0,why:'Never call a number in a pop-up. It is a trick.'},{t:'Pay to fix it',ok:0,why:'Never pay a pop-up. It is a trick.'},{t:'Tap Scan now',ok:0,why:'Do not tap buttons in the pop-up. Use the X.'}],why:'Safe internet habits protect your money and your information.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner: What can you find on a weather website? Then tap Show a model answer.',hint:'Start with: You can find ...',model:['You can find the temperature for each day.','You can see if it will rain.','You can check the weather for the weekend.'],why:'Practise answering in full sentences.'}],
+ cafe:[
+  {type:'pick',title:'Computer words: tab',ask:'What is a tab in a browser?',hint:'Think about the cafe websites at the top of the browser.',opts:[{t:'A website open at the top of the browser',ok:1,why:'Yes. Each tab shows one website. You can have many tabs.'},{t:'A button that closes the computer',ok:0,why:'The X on a tab closes only that tab.'},{t:'A kind of web address',ok:0,why:'The address is in the address bar.'},{t:'A picture on the desktop',ok:0,why:'Pictures on the desktop are icons.'}],why:'Tabs help you keep more than one website open.'},
+  {type:'multi',title:'Types of information',ask:'What can you find on a cafe website? Pick all. Then tap Check.',hint:'Think about both cafe websites.',opts:[{t:'Prices',ok:1},{t:'Opening hours',ok:1},{t:'The address',ok:1},{t:'Your bank balance',ok:0},{t:'The weather forecast',ok:0}],need:'all',badMsg:'Look again. Pick only the information on the cafe websites.',why:'Cafe websites help you decide where to go.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner how you compared the two cafes. Use the word but. Then tap Show a model answer.',hint:'Start with: I opened two tabs.',model:['I opened two tabs.','Herbert Street Cafe is cheaper, but it is closed on Monday.','Falcon Street Kitchen is open every day.'],why:'But shows a difference. It is useful when you compare things.'}],
+ pod:[
+  {type:'pick',title:'Who would use this website?',ask:'Who would use the Easy English Talk website?',hint:'Think about the name of the website.',opts:[{t:'People learning English',ok:1,why:'Yes. It has easy podcasts for learners.'},{t:'People who sell microphones',ok:0,why:'The microphone result was an advert.'},{t:'Bus drivers only',ok:0,why:'The website is for English learners.'},{t:'Doctors only',ok:0,why:'The website is for English learners.'}],why:'The name and the home page tell you who a website is for.'},
+  {type:'multi',title:'Types of information',ask:'What can you find on the internet? Pick all. Then tap Check.',hint:'Think about all your missions.',opts:[{t:'Podcasts',ok:1},{t:'Videos',ok:1},{t:'News',ok:1},{t:'Maps',ok:1},{t:'A swim in the pool',ok:0},{t:'A real cup of coffee',ok:0}],need:'all',badMsg:'Look again. Some of these are real things you do in person, not online.',why:'The internet has many types of information: sound, video, pictures and words.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner: What can you find on the internet? Say three things. Then tap Show a model answer.',hint:'Start with: You can ...',model:['You can listen to podcasts.','You can watch videos.','You can read the news and look at maps.'],why:'Practise answering in full sentences.'}],
+ med:[
+  {type:'pick',scene:'home',title:'Read the address',ask:'Look at the address bar. What is the address of this website?',hint:'Check every letter in the address bar.',opts:[{t:'www.greenwichroadmedical.example',ok:1,why:'Yes. It matches the address bar exactly.'},{t:'www.greenwichmedical.example',ok:0,why:'The word road is missing.'},{t:'www.grenwichroadmedical.example',ok:0,why:'Look at Greenwich. One letter e is missing.'},{t:'www.greenwichroadmedical.com.au',ok:0,why:'The end is different. Look at the last part.'}],why:'A web address must be exact. You can write it down to find the website again.'},
+  {type:'pick',title:'Computer words: the arrow',ask:'Patients in the menu has a small arrow next to it. What does the arrow tell you?',hint:'Think about what happened when you tapped Patients.',opts:[{t:'A list opens when you tap it',ok:1,why:'Yes. The arrow shows a dropdown list.'},{t:'The page is closed',ok:0,why:'The arrow does not close anything.'},{t:'Go back one page',ok:0,why:'The Back arrow is next to the address bar.'},{t:'The website is safe',ok:0,why:'The padlock shows a safe connection, not the arrow.'}],why:'Small signs on a screen tell you what will happen.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner: Who would use this website, and why? Then tap Show a model answer.',hint:'Start with: People who ...',model:['People who need a doctor in Greenwich would use this website.','They can check the hours and read the answers to questions.'],why:'Practise saying who a website is for.'}],
+ bike:[
+  {type:'multi',title:'Web browsers',ask:'You used a web browser to find the bike shop. Which of these are web browsers? Pick all. Then tap Check.',hint:'A browser opens websites. Some programs do other jobs.',opts:[{t:'Google Chrome',ok:1,ic:'chrome'},{t:'Microsoft Edge',ok:1,ic:'edge'},{t:'Safari',ok:1,ic:'safari'},{t:'Firefox',ok:1,ic:'firefox'},{t:'Notepad',ok:0,ic:'notepad'},{t:'Calculator',ok:0,ic:'calc'},{t:'Photos',ok:0,ic:'photos'}],need:'all',badMsg:'Look again. Pick every browser. Notepad, Calculator and Photos are not browsers.',why:'There are many browsers. They look different, but they all open websites.'},
+  {type:'pick',title:'Long pages',ask:'The bike page was long. How did you find Prices?',hint:'Think about how you moved down the page.',opts:[{t:'I scrolled down',ok:1,why:'Yes. Scrolling moves the page up and down.'},{t:'I zoomed out',ok:0,why:'Zoom changes the size. It does not move the page.'},{t:'I closed the tab',ok:0,why:'Closing the tab closes the website.'},{t:'I typed a new address',ok:0,why:'Prices was on the same page. You only needed to scroll.'}],why:'Scroll down to read more. Use Back to top to go up again.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner: What is a web browser? Name two browsers. Then tap Show a model answer.',hint:'Start with: A web browser is ...',model:['A web browser is a program for visiting websites.','Google Chrome and Microsoft Edge are web browsers.'],why:'Knowing the names of programs helps you follow instructions.'}],
+ garden:[
+  {type:'multi',title:'What can you use a website for?',ask:'What can you use a website for? Pick all. Then tap Check.',hint:'Think about all your missions so far.',opts:[{t:'Join a group',ok:1},{t:'Fill in a form',ok:1},{t:'Book a place',ok:1},{t:'Read the news',ok:1},{t:'Water your plants',ok:0},{t:'Wash the dishes',ok:0}],need:'all',badMsg:'Look again. Some of these you can only do with your hands.',why:'Websites help with many everyday jobs.'},
+  {type:'pick',title:'Stay safe',ask:'How can you tell a website is safer?',hint:'Think about the two search results.',opts:[{t:'It has a padlock next to the address',ok:1,why:'Yes. The padlock means the connection is private.'},{t:'It has lots of !!!',ok:0,why:'Lots of !!! is a warning sign.'},{t:'It says you won a prize',ok:0,why:'Prizes from strangers are a warning sign.'},{t:'It uses many capital letters',ok:0,why:'Capital letters everywhere are a warning sign.'}],why:'Check before you open a website.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner what you did on the garden website. Use and and then. Then tap Show a model answer.',hint:'Start with: I chose ...',model:['I chose a small plot and Saturday mornings.','I ticked the rules box, and then I sent the form.'],why:'And and then join your ideas in order.'}],
+ market:[
+  {type:'pick',title:'Who would use this website?',ask:'Who would use the market website?',hint:'Think about what the market sells.',opts:[{t:'People who want to shop at a local market',ok:1,why:'Yes. It tells shoppers the times, stalls and how to get there.'},{t:'People who want to buy shares',ok:0,why:'That was the stock market result. It was a different website.'},{t:'People who need a doctor',ok:0,why:'The market website is about food and plants.'},{t:'People looking for a bus timetable',ok:0,why:'The market website is about the market.'}],why:'Think about who needs the information.'},
+  {type:'pick',title:'Where on the page?',ask:'Where was the Getting here link?',hint:'Think about where you tapped.',opts:[{t:'At the bottom of the page',ok:1,why:'Yes. Some links are at the bottom of the page.'},{t:'In the address bar',ok:0,why:'The address bar has the web address.'},{t:'On the desktop',ok:0,why:'The desktop has icons, not links.'},{t:'Inside the audio player',ok:0,why:'The player has Play and Stop buttons.'}],why:'Links can be at the top, on the side or at the bottom of a page.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner where three stalls are. Then tap Show a model answer.',hint:'Use next to, near and under.',model:['The coffee cart is near the car park.','The bread stall is under the big tree.','The plant stall is next to the toilets.'],why:'Next to, near and under help you say where things are.'}],
+ learn:[
+  {type:'pick',title:'Computer words: filter',ask:'What does a filter do on a website?',hint:'Think about what happened when you tapped Tuesday.',opts:[{t:'It shows only the things you choose',ok:1,why:'Yes. Filters make a long list shorter.'},{t:'It deletes the website',ok:0,why:'Filters do not delete anything.'},{t:'It makes the words bigger',ok:0,why:'That is zoom, not a filter.'},{t:'It closes the tab',ok:0,why:'The X closes a tab.'}],why:'Filters save time on long lists.'},
+  {type:'multi',title:'Types of information',ask:'What can you find on a class website? Pick all. Then tap Check.',hint:'Think about the class cards and details.',opts:[{t:'Days and times',ok:1},{t:'Levels',ok:1},{t:'Where the class is',ok:1},{t:'The weather',ok:0},{t:'Bus prices',ok:0}],need:'all',badMsg:'Look again. Pick only the information on the class website.',why:'A class website tells you when, where and what level.'},
+  {type:'talk',title:'Tell your partner',ask:'Tell your partner about a class you want to do. Use but. Then tap Show a model answer.',hint:'Say the name, the day and one more thing.',model:['I want to do English for everyday life.','It is on Tuesday at 6 pm.','It is free, but I need to book a place.'],why:'But adds an important detail.'}]
+};
+MISSIONS.forEach(function(m){(THINK[m.id]||[]).forEach(function(t){t.think=1;m.tasks.push(t);});});
+SKILLS.push('Say what you can find and do on a website','Say who would use a website','Name web browsers and computer screen words','Answer in full sentences with a partner');
+/* fixed answer order, made once at build time (seed 23560) */
+var FIXED={"swim.2":[3,1,0,2],"swim.3":[1,0,3,2],"swim.4":[3,0,2,4,1],"swim.5":[2,3,1,0],"tiles.swim":[6,5,0,4,3,1,2],"bus.2":[1,0,3,2],"bus.3":[2,1,0,3],"bus.4":[0,3,2,1],"bus.5":[3,1,4,0,2],"bus.6":[1,0,3,2],"tiles.bus":[3,2,1,4,0],"lib.1":[0,2,1,3],"lib.3":[1,2,0,3],"lib.4":[2,3,1,0],"lib.5":[3,0,2,1],"addr.lib":[2,4,5,3,0,6,1],"wx.2":[3,2,1,0],"wx.3":[2,4,1,0,3],"wx.4":[1,0,4,2,3],"wx.5":[0,1,2,3],"tiles.wx":[4,0,1,2,3],"cafe.1":[1,2,3,0],"cafe.2":[3,2,0,1],"cafe.4":[2,3,1,0],"cafe.5":[4,1,3,0,2],"tiles.cafe":[2,3,0,1,4],"pod.4":[1,0,2,3],"pod.5":[5,2,1,0,3,4],"tiles.pod":[2,1,4,0,3],"med.1":[0,1,3,2],"med.2":[1,3,2,0],"med.3":[1,0,2,3],"med.4":[0,1,2,3],"med.5":[2,1,3,0],"tiles.med":[2,3,1,0],"bike.1":[2,3,1,0],"bike.2":[0,1,2,3],"bike.3":[2,1,5,0,3,4,6],"bike.4":[3,0,1,2],"tiles.bike":[2,4,5,3,1,0],"garden.1":[0,3,1,2],"garden.4":[0,1,5,4,3,2],"garden.5":[1,3,0,2],"tiles.garden":[0,2,3,5,4,1],"market.1.ch":[1,3,0,2],"market.2":[1,0,3,2],"market.3":[2,3,0,1],"market.4":[0,1,2,3],"market.5":[1,0,3,2],"tiles.market":[3,2,4,1,0],"learn.2":[0,2,3,1],"learn.3":[1,2,3,0],"learn.4":[0,1,3,2],"learn.5":[2,1,4,0,3],"tiles.learn":[1,5,3,0,2,4]};
+/* ---------- made-up websites (part 1) ---------- */
+function U(k){return S.br.ui[k];}
+function A(key,label){return '<button class="lnk" data-nav="'+key+'">'+label+'</button>';}
+function NB(key,label,cls){return '<button class="sbtn'+(cls?' '+cls:'')+'" data-nav="'+key+'">'+label+'</button>';}
+function SET(k,v,label,cls){return '<button class="'+(cls||'fchip')+(String(U(k))===String(v)?' on':'')+'" data-set="'+k+'='+v+'">'+label+'</button>';}
+function TOG(k,v,label,cls){return '<button class="'+(cls||'fchip')+(String(U(k))===String(v)?' on':'')+'" data-tog="'+k+'='+v+'">'+label+'</button>';}
+function H(bg,name,menu){return '<div class="hdr" style="background:'+bg+'"><span class="sname" style="cursor:default">'+name+'</span>'+(menu?'<nav class="menu">'+menu+'</nav>':'')+'</div>';}
+function table(head,rows){var h='<table class="tt2"><tr>';head.forEach(function(c){h+='<th>'+c+'</th>';});h+='</tr>';rows.forEach(function(r){h+='<tr>';r.forEach(function(c){h+='<td>'+c+'</td>';});h+='</tr>';});return h+'</table>';}
+var SITES={};
+SITES.swim={name:'St Leonards Swim Centre',dom:'stleonardsswim.example',pages:{home:'Home',hours:'Opening hours',prices:'Prices',lessons:'Lessons'},render:function(p){
+ var side='<div class="side">';['home','hours','prices','lessons'].forEach(function(k){side+='<button class="'+(p===k?'on':'')+'" data-nav="swim/'+k+'">'+SITES.swim.pages[k]+'</button>';});side+='</div>';
+ var c='';
+ if(p==='home')c='<h3 class="disp">Welcome</h3><p>We are an indoor pool at 12 Christie Street, St Leonards 2065. You can swim all year.</p><p>Use the menu to find our hours, prices and lessons.</p>';
+ if(p==='hours')c='<h3 class="disp">Opening hours</h3>'+table(['Day','Open','Close'],[['Monday to Friday','6 am','8 pm'],['Saturday','7 am','7 pm'],['Sunday','7 am','6 pm']]);
+ if(p==='prices')c='<h3 class="disp">Prices</h3>'+table(['Ticket','Price'],[['Adult swim','$7.50'],['Child swim (under 16)','$5.00'],['Concession swim','$5.50'],['10 adult swims','$65.00']]);
+ if(p==='lessons')c='<h3 class="disp">Lessons</h3><p>Adult lessons are on Tuesday and Thursday evenings. Children&rsquo;s lessons are on Saturday mornings.</p>';
+ return H('#14467a','St Leonards Swim Centre')+'<div class="cols">'+side+'<div>'+c+'</div></div>';
+}};
+SITES.bus={name:'Harbour Link Buses',dom:'harbourlinkbuses.example',pages:{home:'Home',l22:'Route L22',l30:'Route L30'},render:function(p){
+ var h=H('#9a4f08','Harbour Link Buses');
+ if(p==='home')return h+'<h3 class="disp">Timetables</h3><p>Choose your route.</p><div style="display:grid;gap:.5em;max-width:26em">'+NB('bus/l30','Route L30: St Leonards Station to Lane Cove','alt')+NB('bus/l22','Route L22: St Leonards Station to Neutral Bay','alt')+'</div>';
+ if(p==='l30')return h+'<h3 class="disp">Route L30</h3><p>St Leonards Station to Lane Cove. Weekdays only.</p>'+table(['Stop','Times'],[['St Leonards Station, Pacific Highway','7:40 am, 8:20 am, 9:00 am'],['Lane Cove, Longueville Road','7:58 am, 8:38 am, 9:18 am']]);
+ var tab=U('bustab')||'wk';var T={
+  wk:[['St Leonards Station, Pacific Highway','7:50 am','8:10 am','8:30 am','8:50 am'],['Crows Nest, Willoughby Road','7:55 am','8:15 am','8:35 am','8:55 am'],['Neutral Bay, Military Road','8:12 am','8:32 am','8:52 am','9:12 am']],
+  sat:[['St Leonards Station, Pacific Highway','8:30 am','9:30 am','10:30 am'],['Crows Nest, Willoughby Road','8:35 am','9:35 am','10:35 am'],['Neutral Bay, Military Road','8:52 am','9:52 am','10:52 am']],
+  sun:[['St Leonards Station, Pacific Highway','9:15 am','10:45 am','12:15 pm'],['Crows Nest, Willoughby Road','9:20 am','10:50 am','12:20 pm'],['Neutral Bay, Military Road','9:37 am','11:07 am','12:37 pm']]}[tab];
+ var head=['Stop'];for(var i=1;i<T[0].length;i++)head.push('Bus '+i);
+ return h+'<h3 class="disp">Route L22</h3><p>St Leonards Station to Neutral Bay</p><div class="ptabs">'+SET('bustab','wk','Weekdays','ptab'+(tab==='wk'?' on':''))+SET('bustab','sat','Saturday','ptab'+(tab==='sat'?' on':''))+SET('bustab','sun','Sunday','ptab'+(tab==='sun'?' on':''))+'</div><div style="overflow-x:auto">'+table(head,T)+'</div>';
+}};
+SITES.lib={name:'Crows Nest Community Library',dom:'crowsnestlibrary.example',pages:{home:'Home',events:'Events',book:'Book a place',booked:'Booking confirmed',hours:'Opening hours',contact:'Contact'},render:function(p){
+ var h=H('#2e6b34','Crows Nest Community Library');var c='';
+ var foot='<div class="foot">'+A('lib/events','Events')+A('lib/hours','Opening hours')+A('lib/contact','Contact')+'</div>';
+ if(p==='home')c='<h3 class="disp">Welcome</h3><p>Your local library is at 2 Alexander Street, Crows Nest 2065.</p><p>This month, join our free '+A('lib/events','English conversation group')+'. Meet new people and practise speaking.</p><p>Need help with a computer? Ask at the front desk.</p>';
+ if(p==='events')c='<h3 class="disp">Events</h3><div class="scard"><b>Storytime for children</b><br>Friday, 10 am</div><div class="scard"><b>English conversation group</b><br>Wednesday, 10 am to 11:30 am<br>Level 1 meeting room<br>It is free. Bring your library card.<div style="margin-top:.4em">'+NB('lib/book','Book a free place')+'</div></div><div class="scard"><b>Computer help</b><br>Saturday, 2 pm</div>';
+ if(p==='book'){c='<h3 class="disp">Book: English conversation group</h3><p><b>Number of people</b></p><div class="wtiles">'+SET('bk_n','1','1')+SET('bk_n','2','2')+SET('bk_n','3','3')+'</div><p><b>Date</b></p><div class="wtiles">'+SET('bk_d','29oct','Wednesday 29 October')+SET('bk_d','5nov','Wednesday 5 November')+SET('bk_d','12nov','Wednesday 12 November')+'</div>'+(U('bk_err')?'<p class="err">Choose the number of people and a date.</p>':'')+'<button class="sbtn" data-act="lib-confirm">Confirm</button>';}
+ if(p==='booked'){var dn={'29oct':'Wednesday 29 October','5nov':'Wednesday 5 November','12nov':'Wednesday 12 November'}[U('bk_d')]||'';c='<h3 class="disp">You are booked</h3><div class="scard">English conversation group<br>People: '+(U('bk_n')||'')+'<br>Date: '+dn+'<br>Time: 10 am</div>'+NB('lib/book','Change my booking','alt');}
+ if(p==='hours')c='<h3 class="disp">Opening hours</h3>'+table(['Day','Hours'],[['Monday','Closed'],['Tuesday to Friday','9 am to 7 pm'],['Saturday','9 am to 4 pm'],['Sunday','12 pm to 4 pm']]);
+ if(p==='contact')c='<h3 class="disp">Contact</h3><p>2 Alexander Street, Crows Nest 2065<br>Phone: (02) 5550 0123</p>';
+ return h+c+foot;
+}};
+SITES.wx={name:'SkyCheck Weather',dom:'skycheck.example',pages:{home:'St Leonards forecast'},render:function(){
+ var days=[['Thursday','&#9925;','Partly cloudy','24','15'],['Friday','&#9729;','Cloudy','27','17'],['Saturday','&#9728;','Sunny','31','18'],['Sunday','&#127782;','Showers','22','16'],['Monday','&#127783;','Rain','20','14'],['Tuesday','&#9925;','Partly cloudy','23','15'],['Wednesday','&#9728;','Sunny','25','16']];
+ var h=H('#1c3d6e','SkyCheck Weather')+'<h3 class="disp">St Leonards NSW 2065</h3><div class="scard" style="font-size:1.15em"><b>Today, Wednesday</b><br>&#9728; Sunny. Top 26&deg;. Low 16&deg;.</div>';
+ h+='<button class="sbtn alt" data-tog="more=1">'+(U('more')?'Hide the next 7 days':'Show the next 7 days')+'</button>';
+ if(U('more')){h+='<div style="overflow-x:auto">'+table(['Day','','Weather','Top','Low'],days.map(function(d){return [d[0],d[1],d[2],d[3]+'&deg;',d[4]+'&deg;'];}))+'</div>';}
+ return h;
+}};
+SITES.misc={name:'Practice pages',dom:'practice-news.example',pages:{news:'Practice News',recipes:'Practice Recipes'},render:function(p){
+ if(p==='news')return H('#444','Practice News')+'<h3 class="disp">Today</h3><p>This is a practice news page. Use Back or a different bookmark.</p>';
+ return H('#7a3b2e','Practice Recipes')+'<h3 class="disp">Easy soup</h3><p>This is a practice recipe page. Use Back or a different bookmark.</p>';
+}};
+/* ---------- made-up websites (part 2) ---------- */
+function player(a){return '<div class="player"><button class="sbtn" data-act="say" data-a="'+a+'" data-r="0.95">&#9654; Play</button><button class="sbtn alt" data-act="say" data-a="'+a+'" data-r="0.7">Play slower</button><button class="sbtn alt" data-act="hush">&#9632; Stop</button></div>';}
+SITES.cafe1={name:'Herbert Street Cafe',dom:'herbertstcafe.example',pages:{home:'Herbert Street Cafe'},render:function(){
+ return H('#6b4226','Herbert Street Cafe')+'<p>31 Herbert Street, St Leonards 2065</p><div class="scard"><b>Opening hours</b><br>Tuesday to Sunday, 7 am to 3 pm<br>Closed on Monday</div><h3 class="disp">Our menu</h3>'+table(['Item','Price'],[['Flat white','$4.80'],['Cappuccino','$4.80'],['Tea','$4.00'],['Banana bread','$5.50'],['Big breakfast','$21.00']]);
+}};
+SITES.cafe2={name:'Falcon Street Kitchen',dom:'falconstkitchen.example',pages:{home:'Falcon Street Kitchen'},render:function(){
+ var sec=U('c2')||'menu';
+ var m=SET('c2','menu','Menu','ptab'+(sec==='menu'?' on':''))+SET('c2','hours','Hours','ptab'+(sec==='hours'?' on':''))+SET('c2','find','Find us','ptab'+(sec==='find'?' on':''));
+ var c=sec==='menu'?table(['Item','Price'],[['Flat white','$5.20'],['Latte','$5.20'],['Avocado toast','$18.00'],['Muffin','$5.00']]):(sec==='hours'?'<p>Open every day, 6:30 am to 2:30 pm.</p>':'<p>85 Falcon Street, Crows Nest 2065</p>');
+ return H('#2f4f4f','Falcon Street Kitchen')+'<div class="ptabs">'+m+'</div>'+c;
+}};
+SITES.pod={name:'Easy English Talk',dom:'easyenglishtalk.example',pages:{home:'Episodes',ep1:'Moving to Lane Cove',ep2:'Shopping in Crows Nest'},render:function(p){
+ var h=H('#5b2c6f','Easy English Talk');var c='';
+ if(p==='home')c='<h3 class="disp">Episodes</h3><p>Short, easy podcasts about life on the Lower North Shore.</p><div style="display:grid;gap:.4em;max-width:24em">'+NB('pod/ep2','Shopping in Crows Nest','alt')+NB('pod/ep1','Moving to Lane Cove','alt')+'</div>';
+ if(p==='ep1')c='<h3 class="disp">Moving to Lane Cove</h3><p>Guest: Jason. Length: 2 minutes.</p>'+player('pod')+'<p>'+A('pod/home','All episodes')+'</p>';
+ if(p==='ep2')c='<h3 class="disp">Shopping in Crows Nest</h3><p>This episode is coming soon.</p><p>'+A('pod/home','All episodes')+'</p>';
+ return '<div class="tiny">'+h+c+'</div>';
+}};
+SITES.med={name:'Greenwich Road Medical Centre',dom:'greenwichroadmedical.example',pages:{home:'Home',hours:'Opening hours',faq:'Questions',doctors:'Our doctors',contact:'Contact'},render:function(p){
+ var list=U('dd')==='pat'?'<div class="list" role="menu"><button data-nav="med/hours">Opening hours</button><button data-nav="med/faq">Questions</button></div>':'';
+ var menu='<div class="dd">'+'<button data-tog="dd=pat" aria-expanded="'+(U('dd')==='pat')+'">Patients &#9662;</button>'+list+'</div><button data-nav="med/doctors">Our doctors</button><button data-nav="med/contact">Contact</button>';
+ var h=H('#0b5f5f','Greenwich Road Medical Centre',menu);var c='';
+ if(p==='home')c='<h3 class="disp">Welcome</h3><p>We are a family medical centre at 120 Greenwich Road, Greenwich 2065.</p><p>Call (02) 5550 0188 to book.</p>';
+ if(p==='hours')c='<h3 class="disp">Opening hours</h3>'+table(['Day','Hours'],[['Monday to Friday','8 am to 6 pm'],['Saturday','8:30 am to 12:30 pm'],['Sunday','Closed']]);
+ if(p==='faq'){var Q=[['Do I need to book?','Yes. Call us to book.'],['What do I bring to my first visit?','Bring your Medicare card and a list of your medicines.'],['Can I see a doctor in my language?','You can ask for an interpreter. Tell us when you book. We can book a free phone interpreter.'],['Is there parking?','Yes. There is street parking on Greenwich Road.']];
+  c='<h3 class="disp">Questions</h3><p>Tap a question to see the answer.</p>';Q.forEach(function(q,i){var open=String(U('faq'))===String(i);c+='<div class="acc"><button data-tog="faq='+i+'" aria-expanded="'+open+'">'+(open?'&#9662; ':'&#9656; ')+q[0]+'</button>'+(open?'<div class="an">'+q[1]+'</div>':'')+'</div>';});}
+ if(p==='doctors')c='<h3 class="disp">Our doctors</h3><p>We have four doctors and two nurses.</p>';
+ if(p==='contact')c='<h3 class="disp">Contact</h3><p>120 Greenwich Road, Greenwich 2065<br>Phone: (02) 5550 0188</p>';
+ return h+c;
+}};
+SITES.bike={name:'Blues Point Bikes',dom:'bluespointbikes.example',pages:{home:'Bike hire'},render:function(){
+ return H('#1f5fa8','Blues Point Bikes')+'<p>15 Blues Point Road, McMahons Point 2060</p><h3 class="disp">How it works</h3><p>Play our short message.</p>'+player('bike')+
+ '<div class="gal"><span>&#128690;</span><span>&#127754;</span><span>&#128690;</span><span>&#127965;</span><span>&#128690;</span><span>&#127748;</span></div>'+
+ '<h3 class="disp">Our bikes</h3><p>We have city bikes, electric bikes and bikes for children. All bikes come with a free helmet and a lock.</p>'+
+ '<h3 class="disp">Ride routes</h3><p>Ride from Blues Point Reserve to Milsons Point. Ride along the harbour to Kirribilli. Ride up the hill to North Sydney.</p>'+
+ '<h3 class="disp">Opening hours</h3><p>Every day, 8 am to 6 pm.</p>'+
+ '<h3 class="disp">Safety</h3><p>Wear your helmet at all times. Ride on the left side of the path. Ring your bell before you pass people.</p>'+
+ '<h3 class="disp">Prices</h3>'+table(['Time','Price'],[['1 hour','$15'],['2 hours','$25'],['Half day (4 hours)','$40'],['Full day','$60']])+
+ '<p><button class="lnk" data-act="totop">&#8679; Back to top</button></p>';
+}};
+SITES.garden={name:'Ernest Street Community Garden',dom:'ernestgarden.example',pages:{home:'Home',join:'Join the garden',thanks:'Thank you'},render:function(p){
+ var h=H('#3a6b2a','Ernest Street Community Garden');
+ if(p==='home')return h+'<h3 class="disp">Welcome</h3><p>We are a shared garden on Ernest Street, Cammeray 2062. Grow vegetables and meet your neighbours.</p>'+NB('garden/join','Join the garden');
+ if(p==='join'){var tick=U('g_rules')==='1';
+  return h+'<h3 class="disp">Join the garden</h3><p><b>Plot size</b></p><div class="wtiles">'+SET('g_size','small','Small plot')+SET('g_size','large','Large plot')+'</div><p><b>Day</b></p><div class="wtiles">'+SET('g_day','sat','Saturday mornings')+SET('g_day','sun','Sunday afternoons')+'</div>'+
+  '<p><button class="fchip'+(tick?' on':'')+'" data-tog="g_rules=1" role="checkbox" aria-checked="'+tick+'">'+(tick?'&#9745;':'&#9744;')+' I will follow the garden rules</button></p>'+(U('g_err')?'<p class="err">'+U('g_err')+'</p>':'')+'<button class="sbtn" data-act="garden-send">Send</button>';}
+ var sz={small:'Small plot',large:'Large plot'}[U('g_size')]||'',dy={sat:'Saturday mornings',sun:'Sunday afternoons'}[U('g_day')]||'';
+ return h+'<h3 class="disp">Thank you</h3><div class="scard">Plot: '+sz+'<br>Day: '+dy+'</div>'+NB('garden/join','Change my answers','alt');
+}};
+SITES.market={name:'Artarmon Sunday Market',dom:'artarmonmarket.example',pages:{home:'Home',about:'About',getting:'Getting here',stall:'Stallholders'},render:function(p){
+ var foot='<div class="foot">'+A('market/home','Home')+A('market/about','About')+A('market/getting','Getting here')+A('market/stall','Stallholders')+'</div>';var c='';
+ if(p==='home')c='<div class="hero" style="background:#a8550a"><h3 class="disp" style="font-size:1.4em">Artarmon Sunday Market</h3><p style="margin:.2em 0">Every Sunday, 8 am to 1 pm</p><p style="margin:0">Artarmon Reserve, Artarmon 2064</p></div><h3 class="disp">Market guide</h3><p>Listen to find your way around.</p>'+player('market')+'<h3 class="disp">This week</h3><p>Fresh mangoes are back. Bring your own bags.</p>';
+ if(p==='about')c='<h3 class="disp">About</h3><p>A small local market with fruit, bread, coffee and plants.</p>';
+ if(p==='getting')c='<h3 class="disp">Getting here</h3><p><b>By train:</b> walk 5 minutes from Artarmon Station.</p><p><b>By car:</b> there is street parking only.</p>';
+ if(p==='stall')c='<h3 class="disp">Stallholders</h3><p>Want a stall? Send us an email.</p>';
+ return c+foot;
+}};
+var CLASSES=[
+ {id:'c1',t:'English for everyday life',d:'Tue',tm:'ev',lv:'2',when:'Tuesday, 6 pm to 8 pm',room:'Room 3'},
+ {id:'c2',t:'Computer basics',d:'Tue',tm:'mo',lv:'2',when:'Tuesday, 10 am to 12 pm',room:'Room 1'},
+ {id:'c3',t:'Talking with confidence',d:'Thu',tm:'ev',lv:'2',when:'Thursday, 6 pm to 8 pm',room:'Room 3'},
+ {id:'c4',t:'Writing emails',d:'Tue',tm:'ev',lv:'3',when:'Tuesday, 6 pm to 8 pm',room:'Room 2'},
+ {id:'c5',t:'Reading the news',d:'Mon',tm:'mo',lv:'1',when:'Monday, 10 am to 12 pm',room:'Room 2'},
+ {id:'c6',t:'English for work',d:'Wed',tm:'ev',lv:'3',when:'Wednesday, 6 pm to 8 pm',room:'Room 1'}];
+SITES.learn={name:'Lower North Shore Learning Hub',dom:'lnslearninghub.example',pages:{home:'Home',classes:'Find a class',about:'About',c1:'English for everyday life',c2:'Computer basics',c3:'Talking with confidence',c4:'Writing emails',c5:'Reading the news',c6:'English for work'},render:function(p){
+ var h=H('#6A3FA0','Lower North Shore Learning Hub','<button data-nav="learn/home">Home</button><button data-nav="learn/classes">Find a class</button><button data-nav="learn/about">About</button>');
+ if(p==='home')return h+'<h3 class="disp">Welcome</h3><p>Free and low cost classes for adults at 88 Military Road, Neutral Bay 2089.</p>';
+ if(p==='about')return h+'<h3 class="disp">About</h3><p>We are a community learning centre. Our teachers are friendly.</p>';
+ if(p==='classes'){var c=h+'<h3 class="disp">Find a class</h3><p><b>Day</b></p><div class="wtiles">'+TOG('f_day','Mon','Monday')+TOG('f_day','Tue','Tuesday')+TOG('f_day','Wed','Wednesday')+TOG('f_day','Thu','Thursday')+'</div><p><b>Time</b></p><div class="wtiles">'+TOG('f_tm','mo','Morning')+TOG('f_tm','ev','Evening')+'</div><p><b>Level</b></p><div class="wtiles">'+TOG('f_lv','1','Level 1')+TOG('f_lv','2','Level 2')+TOG('f_lv','3','Level 3')+'</div>';
+  var L=CLASSES.filter(function(k){return (!U('f_day')||U('f_day')===k.d)&&(!U('f_tm')||U('f_tm')===k.tm)&&(!U('f_lv')||U('f_lv')===k.lv);});
+  c+='<p class="small">'+L.length+' classes</p>';L.forEach(function(k){c+='<button class="scard" style="display:block;width:100%;text-align:left;background:#fff;cursor:pointer" data-nav="learn/'+k.id+'"><b>'+k.t+'</b><br>'+k.when+'<br>Level '+k.lv+'</button>';});
+  return c;}
+ var k=CLASSES.filter(function(x){return x.id===p;})[0];
+ if(k)return h+'<h3 class="disp">'+k.t+'</h3><p>'+k.when+'. Level '+k.lv+'.</p><p>'+k.room+', 88 Military Road, Neutral Bay.</p><p>'+(k.id==='c1'?'This class is free, but you need to book a place. Bring a pen and a notebook.':'Call us to find out more.')+'</p>'+A('learn/classes','Back to all classes');
+ return h;
+}};
+/* ---------- state ---------- */
+var NM=MISSIONS.length;
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=a[i];a[i]=a[j];a[j]=x;}return a;}
+function range(n){var r=[];for(var i=0;i<n;i++)r.push(i);return r;}
+var storeOK=true,savedTimer=null;
+function newBr(){return {open:false,tabs:[],at:0,q:[],aq:[],typed:'',addrOpen:false,zoom:100,ui:{},f:{},searched:false};}
+function fresh(){return {view:'menu',mo:range(NM),pos:0,t:0,done:{},picks:{},ans:{},ord:{},heard:{},hintOn:false,msg:null,blocked:0,sz:1,win:null,started:false,br:newBr()};}
+var S=fresh();
+function load(){try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);if(o&&o.mo&&o.mo.length===NM){var f=fresh();for(var k in o){if(Object.prototype.hasOwnProperty.call(o,k))f[k]=o[k];}S=f;S.mo=range(NM);}}}catch(e){storeOK=false;}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));storeOK=true;var el=$('saved');el.classList.add('on');clearTimeout(savedTimer);savedTimer=setTimeout(function(){el.classList.remove('on');},1200);}catch(e){storeOK=false;}}
+function M(){return MISSIONS[S.mo[S.pos]];}
+function T(){return M().tasks[S.t];}
+function tkey(m,t){return m.id+'.'+t;}
+function KEYc(){return tkey(M(),S.t);}
+/* answer order is FIXED: made once at build time so every student sees the same order, with no pattern */
+function ord(key,n){var f=FIXED[key];return f&&f.length===n?f:range(n);}
+function optOrd(task,key){return ord(key,task.opts.length);}
+function itemOrd(key,i,n){return ord(key+'.ch',n);}
+function reshuffle(){}
+function letter(p){return 'ABCDEFGHIJKLMNOP'.charAt(p);}
+function siteOf(page){return page&&page.indexOf('/')>-1?page.split('/')[0]:null;}
+function tab(){return S.br.tabs[S.br.at];}
+function msites(m){return m.sites||[m.site];}
+function toast(t){var el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(el._t);el._t=setTimeout(function(){el.hidden=true;},Math.max(2600,t.length*70));}
+function hush(){try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(x){}}
+function applySize(){document.documentElement.className=['s0','','s2','s3'][S.sz];}
+function mStats(m){var d=0;for(var i=0;i<m.tasks.length;i++){if(S.done[tkey(m,i)])d++;}return {d:d,n:m.tasks.length};}
+function totals(){var d=0,n=0,mc=0;MISSIONS.forEach(function(m){var s=mStats(m);d+=s.d;n+=s.n;if(s.d===s.n)mc++;});return {d:d,n:n,mc:mc};}
+
+/* ---------- scenes: a valid desktop at the start of a task ---------- */
+function openBr(tabs){S.br=newBr();S.br.open=true;S.br.tabs=tabs;S.br.at=0;}
+function hasCafes(){var p=S.br.tabs.map(function(x){return siteOf(x.page);});return S.br.open&&p.indexOf('cafe1')>-1&&p.indexOf('cafe2')>-1;}
+function applyScene(m,t,force){
+ var task=m.tasks[t];S.win=null;
+ if(t===0){if(m.start==='closed')S.br=newBr();else openBr([{page:'findit',hist:[]}]);return;}
+ if(task.scene==='home'){openBr([{page:m.site+'/home',hist:[]}]);return;}
+ if(task.scene==='results'){openBr([{page:'results',hist:['findit']}]);S.br.q=m.search.q.slice();S.br.searched=true;return;}
+ if(task.scene==='cafes'){if(!force&&hasCafes())return;openBr([{page:'results',hist:['findit']},{page:'cafe1/home',hist:[]},{page:'cafe2/home',hist:[]}]);S.br.q=m.search.q.slice();S.br.searched=true;return;}
+ if(!force&&S.br.open&&S.br.tabs.length&&msites(m).indexOf(siteOf(tab().page))>-1)return;
+ openBr([{page:m.site+'/home',hist:[]}]);
+}
+function enterTask(pos,t,keepDesk){var mk=tkey(MISSIONS[S.mo[pos]],t);if(!S.done[mk]&&!S.picks[mk]&&!S.ans[mk]&&!Object.keys(S.ans).some(function(k){return k.indexOf(mk+'.')===0;}))reshuffle(mk);S.pos=pos;S.t=t;S.view='task';S.msg=null;S.hintOn=false;S.blocked=0;S.started=true;if(!keepDesk)applyScene(M(),t,false);}
+function complete(key,lead,text){S.done[key]=true;S.msg={k:'g',lead:lead||'Well done. ',t:text||'Tap Next to go on.'};}
+
+/* ---------- guide card ---------- */
+var LET='ABCDEF';
+function note(k,lead,t){var sym={i:'i',t:'&#10003;',w:'!',g:'&#10003;'}[k];return '<div class="nb '+k+'"><div class="bd">'+sym+'</div><div class="bx">'+(lead?'<b>'+esc(lead)+'</b>':'')+esc(t)+'</div></div>';}
+function optsHTML(task,key,isDone,multi){
+ var o=optOrd(task,key);var p=S.picks[key];var h='<div class="opts">';
+ o.forEach(function(oi,pos){var op=task.opts[oi];var c='opt k'+pos;var mark='';
+  if(multi){var on=(p||[]).indexOf(oi)>-1;if(on){c+=isDone?' right':' sel';mark='&#10003; ';}}
+  else if(p===oi){if(op.ok){c+=' right';mark='&#10003; ';}else{c+=' wrong';mark='&#10007; ';}}
+  h+='<button class="'+c+'" data-act="'+(multi?'pick':'single')+'" data-pos="'+pos+'" '+(isDone?'disabled':'')+'><span class="lt">'+LET[pos]+'</span><span class="ot">'+(op.ic?'<span class="oic">'+ICONS[op.ic]+'</span>':'')+mark+esc(op.t)+'</span></button>';});
+ h+='</div>';
+ if(!isDone){h+='<div class="row">';if(multi)h+='<button class="btn" data-act="check-multi">Check</button>';if(multi?(p&&p.length):p!==undefined)h+='<button class="btn alt" data-act="clear">Change my answer</button>';h+='</div>';}
+ return h;
+}
+function locked(task){return task.audio&&!S.heard[task.audio];}
+function tfHTML(task,key,isDone){var h='',lk=locked(task);
+ task.items.forEach(function(it,i){var k=key+'.'+i;h+='<div class="tfrow"><div>'+esc(it.s)+'</div>';
+  if(S.ans[k])h+='<div class="small">&#10003; '+esc(it.why)+'</div>';
+  else{var o=itemOrd(key,i,2,it.ok?0:1);h+='<div class="row">';o.forEach(function(v){h+='<button class="chip" data-act="tf" data-i="'+i+'" data-v="'+(v===0?'1':'0')+'" '+(lk||isDone?'disabled':'')+'>'+(v===0?'True':'False')+'</button>';});h+='</div>';}
+  h+='</div>';});return h;}
+function orderHTML(task,key,isDone){var b=S.ans[key]||[];var lk=locked(task);var h='';
+ if(b.length){h+='<ol class="ordlist">';b.forEach(function(i){h+='<li>'+esc(task.items[i])+'</li>';});h+='</ol>';}
+ if(b.length<task.items.length){h+='<div class="row">';ord(key,task.items.length).forEach(function(i){if(b.indexOf(i)>-1)return;h+='<button class="chip" data-act="ordpick" data-i="'+i+'" '+(lk||isDone?'disabled':'')+'>'+esc(task.items[i])+'</button>';});h+='</div>';}
+ return h;}
+function matchHTML(task,key,isDone){var lk=locked(task);var h='';
+ task.items.forEach(function(it,i){var k=key+'.'+i;h+='<div class="gap-row"><b>'+esc(it.q)+':</b> <span class="blank">'+(S.ans[k]?esc(S.ans[k]):'?')+'</span>';
+  if(!S.ans[k]){h+='<div class="row">';itemOrd(key,i,task.choices.length,task.choices.indexOf(it.ans)).forEach(function(ci){var c=task.choices[ci];h+='<button class="chip" data-act="mpick" data-i="'+i+'" data-v="'+esc(c)+'" '+(lk||isDone?'disabled':'')+'>'+esc(c)+'</button>';});h+='</div>';}
+  h+='</div>';});return h;}
+function guideHTML(){
+ var m=M(),task=T(),key=KEYc(),isDone=!!S.done[key];
+ var h='<div class="secbar"><div class="L">'+letter(S.pos)+'</div><div class="T">'+m.icon+'&nbsp; '+esc(m.title)+'</div></div>';
+ h+='<div class="card" id="gcard"><div class="chead"><div class="num">'+(S.t+1)+'</div><div><h2 class="qt">'+esc(task.title)+'</h2><div class="small">'+(task.think?'<span class="thtag">&#128172; Think about it</span> ':'')+'Task '+(S.t+1)+' of '+m.tasks.length+' &middot; '+esc(m.place)+'</div></div></div><p class="ask">'+esc(task.ask)+'</p>';
+ if(locked(task))h+=note('i','','Play the recording on the website first. Then the answers open.');
+ if(task.type==='pick')h+=optsHTML(task,key,isDone,false);
+ else if(task.type==='multi')h+=optsHTML(task,key,isDone,true);
+ else if(task.type==='tf')h+=tfHTML(task,key,isDone);
+ else if(task.type==='order')h+=orderHTML(task,key,isDone);
+ else if(task.type==='match')h+=matchHTML(task,key,isDone);
+ else if(task.type==='talk'){if(!isDone)h+=note('t','Say it first. ','Talk to your partner. Then check with the model answer.')+'<div class="row"><button class="btn" data-act="talk">Show a model answer</button></div>';else h+='<div class="nb i"><div class="bd">&#128172;</div><div class="bx"><b>Model answer</b>'+task.model.map(function(x){return '<div>'+esc(x)+'</div>';}).join('')+'</div></div>';}
+ else if(!isDone)h+='<p class="small">Do this on the computer screen'+(window.innerWidth>=1200?' on the right.':' below.')+'</p>';
+ if(S.msg)h+=note(S.msg.k,S.msg.lead,S.msg.t);
+ if(S.hintOn)h+=note('t','Hint. ',task.hint);
+ if(isDone)h+=note('i','Remember: ',task.why);
+ if(isDone&&S.t===m.tasks.length-1)h+=note('g','Mission complete! ',S.pos<NM-1?'Tap Next mission.':'Tap See my results.');
+ h+='<div class="row"><button class="btn alt" data-act="hint">'+(S.hintOn?'Hide the hint':'Show a hint')+'</button></div></div>';
+ return h;
+}
+function tileHTML(pos,showDesc){var m=MISSIONS[S.mo[pos]];var s=mStats(m);
+ var st=s.d===0?'':'<span class="st'+(s.d===s.n?' ok':'')+'">'+(s.d===s.n?'&#10003; ':'')+s.d+' of '+s.n+' done</span>';
+ return '<button class="tile" data-act="mission" data-pos="'+pos+'"><span class="L">'+letter(pos)+'</span><span class="tx"><b>'+m.icon+'&nbsp; '+esc(m.title)+'</b><span class="small">'+esc(m.place)+'</span>'+(showDesc?'<span>'+esc(m.blurb)+'</span>':'')+st+'</span></button>';}
+function menuHTML(){
+ var tt=totals();
+ var h='<div class="addrbar"><span class="dots"><i></i><i></i><i></i></span><span class="u">vu23560 &rsaquo; internet-missions</span><span class="tag">VU23560</span></div>';
+ h+='<div class="cover"><div class="eyebrow">Access the internet and email &middot; EAL Level 2</div><h1>Internet missions</h1><p class="sub">Do real-life tasks on a practice computer. Choose any mission.</p><p class="small">The streets and suburbs are real. The places and websites are made up for practice.</p></div>';
+ if(S.started&&tt.d<tt.n)h+=note('i','Welcome back! ','You were on Mission '+letter(S.pos)+', task '+(S.t+1)+'.')+'<div class="row"><button class="btn" data-act="continue">Continue</button></div>';
+ h+='<h2 class="disp" style="font-size:1rem;margin-top:.6rem">Missions</h2><div class="tiles">';
+ for(var p=0;p<NM;p++)h+=tileHTML(p,true);
+ h+='</div><div class="row">'+(S.started?'<button class="btn alt" data-act="results">See my results</button><button class="btn alt" data-act="reset">Start again</button>':'')+'</div>';
+ return h;
+}
+function doneHTML(){
+ var tt=totals();var stars=Math.round(tt.d/tt.n*5);
+ var band=tt.d===tt.n?'Excellent. You finished every mission.':(tt.d/tt.n>=0.75?'Very good. Try the tasks below again.':'Good start. Try the tasks below again.');
+ var h='<div class="secbar"><div class="L">&#10003;</div><div class="T">My results</div></div><div class="card">';
+ h+='<p class="disp" style="font-size:1.8rem;color:var(--c1);margin:0">'+tt.mc+' of '+NM+' missions</p><p style="margin:0">'+tt.d+' of '+tt.n+' tasks finished</p><p style="font-size:1.4rem;margin:.2rem 0;color:var(--c2)" aria-label="'+stars+' stars out of 5">'+'&#9733;'.repeat(stars)+'<span style="color:#bbb">'+'&#9733;'.repeat(5-stars)+'</span></p><p>'+band+'</p>';
+ h+='<div class="tiles">';for(var p=0;p<NM;p++)h+=tileHTML(p,false);h+='</div>';
+ var todo=[];for(var q=0;q<NM;q++){var m=MISSIONS[S.mo[q]];m.tasks.forEach(function(x,i){if(!S.done[tkey(m,i)])todo.push([q,i,x.title]);});}
+ if(todo.length){h+='<p><b>Tasks to try again:</b></p><div class="row">';todo.forEach(function(d){h+='<button class="chip" data-act="goto" data-pos="'+d[0]+'" data-t="'+d[1]+'">'+letter(d[0])+(d[1]+1)+'. '+esc(d[2])+'</button>';});h+='</div>';}
+ h+='<p><b>Skills you practised:</b></p>';SKILLS.forEach(function(s){h+='<div>&#10003; '+esc(s)+'</div>';});
+ h+='<div class="row" style="margin-top:.6rem"><button class="btn" data-act="menu">Back to the menu</button><button class="btn alt" data-act="reset">Start again</button></div></div>';
+ return h;
+}
+/* ---------- browser ---------- */
+function urlOf(pg){
+ if(pg==='findit')return 'findit.example';
+ if(pg==='results')return 'findit.example/search?q='+S.br.q.join('+');
+ if(pg==='noaddr')return S.br.typed||'';
+ var s=siteOf(pg),p=pg.split('/')[1],st=SITES[s];return st?'www.'+st.dom+(p==='home'?'':'/'+p):'';
+}
+function titleOf(pg){
+ if(pg==='findit')return 'New tab';if(pg==='results')return S.br.q.join(' ')+' - FindIt';if(pg==='noaddr')return 'Not found';
+ var s=siteOf(pg),p=pg.split('/')[1],st=SITES[s];if(!st)return '';return p==='home'?st.name:(st.pages[p]||st.name);
+}
+function qText(){return S.br.q.join(' ');}
+function sEval(){var m=M();if(!m.search||!S.br.q.length)return {ok:false};var fx=m.search.fix||{};
+ var raw=S.br.q.map(function(w){return w.toLowerCase();});var fixed=raw.map(function(w){return fx[w]||w;});
+ var need=m.search.need||[m.search.q.map(function(w){return w.toLowerCase();})];
+ var ok=need.some(function(g){return g.every(function(w){return fixed.indexOf(w)>-1;});});
+ var typo=raw.some(function(w){return !!fx[w];});
+ var shown=S.br.q.map(function(w){var f=fx[w.toLowerCase()];return f?(w.charAt(0)===w.charAt(0).toUpperCase()?f.charAt(0).toUpperCase()+f.slice(1):f):w;}).join(' ');
+ return {ok:ok,typo:typo,shown:shown};}
+function qOK(){return sEval().ok;}
+function searchBox(){
+ var m=M();var h='<div class="sbox"><div class="qbox'+(S.br.q.length?'':' empty')+'" aria-live="polite">'+(S.br.q.length?esc(qText()):'Search the web')+'</div><button class="sbtn" data-act="search">Search</button></div>';
+ if(!m.search)return h+'<p class="small">You do not need to search in this mission.</p>';
+ h+='<p class="small" style="margin:.5em 0 0">Tap the words to type:</p><div class="wtiles">';
+ ord('tiles.'+m.id,m.search.tiles.length).forEach(function(i){h+='<button class="wt" data-act="tile" data-w="'+esc(m.search.tiles[i])+'">'+esc(m.search.tiles[i])+'</button>';});
+ return h+'<button class="sbtn alt" data-act="tile-del">Delete</button><button class="sbtn alt" data-act="tile-clear">Clear</button></div>';
+}
+function resultsHTML(){
+ var m=M();var ev=sEval();var h='<div class="sbox"><div class="qbox">'+esc(qText())+'</div></div>'+(ev.ok&&ev.typo?'<p>Showing results for <b><i>'+esc(ev.shown)+'</i></b></p><p class="small">You typed: '+esc(qText())+'</p>':'<p class="small">Results for &quot;'+esc(qText())+'&quot;</p>');
+ if(!S.br.searched||!ev.ok)return h+'<p>No results. Check the spelling and try again.</p><p class="small">Tap the Back arrow to go back.</p>';
+ m.search.results.forEach(function(r,i){
+  h+='<div class="r">'+(r.ad?'<span class="ad">Ad</span>':'')+'<button data-act="res" data-i="'+i+'">'+esc(r.t)+'</button><div class="url">'+(r.lock?'&#128274; ':'')+(r.nolock?'<span class="notsec">&#9888; Not secure</span> ':'')+esc(r.u)+'</div>'+(r.newtab?'<button class="nt" data-act="resnew" data-i="'+i+'">&#10697; Open in new tab</button>':'')+'</div>';});
+ return h;
+}
+function pageHTML(pg){
+ if(pg==='findit')return '<div style="max-width:34em;margin:1em auto 0"><p class="disp" style="font-size:2em;text-align:center;margin:0 0 .4em;color:#1a73e8">FindIt</p>'+searchBox()+'<p class="small">FindIt is a practice search engine.</p></div>';
+ if(pg==='results')return resultsHTML();
+ if(pg==='noaddr')return '<h3 class="disp">This site can&rsquo;t be reached</h3><p>Check the spelling of the address.</p><p class="small">'+esc(S.br.typed)+'</p>';
+ var s=siteOf(pg),st=SITES[s];return st?st.render(pg.split('/')[1]):'';
+}
+function trayHTML(){
+ var m=M();
+ if(!m.addr)return '<div class="atray"><p style="margin:0 0 .4em">You do not need to type an address in this mission.</p><button class="sbtn alt" data-act="addr">Close</button></div>';
+ var h='<div class="atray"><p style="margin:0 0 .3em"><b>Type an address</b></p><div class="qbox'+(S.br.aq.length?'':' empty')+'">'+(S.br.aq.length?esc(S.br.aq.join('')):'Tap the parts below')+'</div><div class="wtiles">';
+ ord('addr.'+m.id,m.addr.tiles.length).forEach(function(i){h+='<button class="wt" data-act="atile" data-w="'+esc(m.addr.tiles[i])+'">'+esc(m.addr.tiles[i])+'</button>';});
+ return h+'</div><div class="sbox"><button class="sbtn" data-act="addr-go">Go</button><button class="sbtn alt" data-act="atile-del">Delete</button><button class="sbtn alt" data-act="atile-clear">Clear</button><button class="sbtn alt" data-act="addr">Cancel</button></div></div>';
+}
+var WINNAMES={notepad:'Notepad',photos:'Photos',calc:'Calculator',bin:'Recycle Bin'};
+function renderDesk(){
+ $('win-browser').hidden=!S.br.open;
+ ['notepad','photos','calc','bin'].forEach(function(n){$('win-'+n).hidden=S.win!==n;});
+ $('tbtns').innerHTML=(S.br.open?'<span class="tbtn">Google Chrome</span>':'')+(S.win?'<span class="tbtn">'+WINNAMES[S.win]+'</span>':'');
+ if(!S.br.open)return;
+ var th='';S.br.tabs.forEach(function(x,i){th+='<div class="tab'+(i===S.br.at?' on':'')+'"><button class="tt" data-act="tab" data-i="'+i+'">'+esc(titleOf(x.page))+'</button><button class="tx" data-act="tabx" data-i="'+i+'" aria-label="Close tab '+esc(titleOf(x.page))+'">X</button></div>';});
+ th+='<button class="newtab" data-act="newtab" aria-label="New tab">+</button><button class="xbtn" data-act="close-browser" aria-label="Close Google Chrome">X</button>';
+ $('tabs').innerHTML=th;
+ var pg=tab().page;var s=siteOf(pg);
+ $('addr').innerHTML=(s?'<span class="lock">&#128274;</span>':(pg==='noaddr'?'<span class="lock">&#9888;</span>':''))+esc(urlOf(pg));
+ $('zl').textContent=S.br.zoom+'%';
+ var bm='';BOOKMARKS.forEach(function(b,i){bm+='<button class="bm" data-act="bm" data-i="'+i+'">&#9733; '+esc(b.t)+'</button>';});$('bmbar').innerHTML=bm;
+ $('atray').innerHTML=S.br.addrOpen?trayHTML():'';
+ $('bcontent').innerHTML='<div style="font-size:'+(S.br.zoom/100)+'em">'+pageHTML(pg)+'</div>';
+ var pop='';
+ if(s==='swim'&&!S.br.f.cookie&&!S.done['swim.1'])pop='<div class="cookie" role="dialog" aria-label="Cookies"><p style="margin:0 0 .5em">&#127850; This website uses cookies. Cookies are small files that save information about you.</p><div class="sbox"><button class="sbtn" style="background:#fff;color:#111" data-act="pop" data-e="cookie:all">Accept all cookies</button><button class="sbtn alt" data-act="pop" data-e="cookie:needed">Only needed cookies</button></div></div>';
+ if(s==='wx'&&!S.br.f.virus&&!S.done['wx.1'])pop='<div class="virus" role="dialog" aria-label="Warning"><div class="vh"><b style="font-size:1.15em">&#9888; WARNING! Your computer has 5 viruses!</b><button class="xbtn" data-act="pop" data-e="virus:close" aria-label="Close warning">X</button></div><p>Your files are in danger. Act now!</p><div class="sbox"><button class="sbtn" style="background:#c00" data-act="pop" data-e="virus:call">Call us now</button><button class="sbtn" style="background:#c00" data-act="pop" data-e="virus:scan">Scan now</button></div></div>';
+ $('popslot').innerHTML=pop;
+}
+function go(key){var t=tab();t.hist.push(t.page);t.page=key;S.br.ui.dd=null;S.br.addrOpen=false;var w=$('bwrap');if(w)w.scrollTop=0;return pageEvts(key);}
+function pageEvts(key){var s=siteOf(key);if(!s)return [];var p=key.split('/')[1];var e=['page:'+s+':'+p];if(p==='home')e.unshift('arrive:'+s);return e;}
+function back(){var t=tab();if(t&&t.hist.length){t.page=t.hist.pop();S.br.ui.dd=null;}}
+function closeBrowser(){S.br=newBr();}
+function closeTab(i){
+ var s=siteOf(S.br.tabs[i].page);S.br.tabs.splice(i,1);
+ if(!S.br.tabs.length){closeBrowser();return ['close:browser'];}
+ if(i<S.br.at||S.br.at>=S.br.tabs.length)S.br.at=Math.max(0,S.br.at-1);
+ return ['tabclose:'+(s==='cafe1'||s==='cafe2'?s:'other')];
+}
+
+/* ---------- events ---------- */
+function emitStep(evt){
+ if(S.view!=='task')return;var m=M(),t=T(),key=KEYc();
+ if(S.done[key]){var nx=m.tasks[S.t+1];if(!nx||nx.type!=='act')return;
+  if(nx.expect.indexOf(evt)>-1||(nx.wrong&&nx.wrong[evt])||(nx.info&&nx.info[evt])){S.t++;S.hintOn=false;S.blocked=0;S.msg=null;t=nx;key=KEYc();}else return;}
+ if(t.type!=='act')return;
+ if(t.expect.indexOf(evt)>-1){complete(key);return;}
+ if(t.info&&t.info[evt]){S.msg={k:'i',lead:'',t:t.info[evt]};return;}
+ var w=t.wrong&&t.wrong[evt];if(!w&&S.t===0)w=WRONG_ICON[evt];
+ if(w){S.msg={k:'w',lead:/^Stop/.test(w)?'':'Not quite. ',t:w};if(evt==='close:browser'&&t.scene)applyScene(m,S.t,true);}
+}
+function emitAll(list){if(hasCafes()&&!S.br.f.cafes){S.br.f.cafes=1;list=list.concat(['tabs:cafes']);}var before=JSON.stringify(S.msg)+S.t;list.forEach(emitStep);save();render();
+ if(S.view==='task'&&S.msg&&JSON.stringify(S.msg)+S.t!==before){if(window.innerWidth<1200)toast((S.msg.lead||'')+S.msg.t);}}
+/* ---------- render ---------- */
+function render(){
+ applySize();var v=S.view;var sp=document.querySelector('[data-act="size+"]'),sm=document.querySelector('[data-act="size-"]');sp.disabled=S.sz>=3;sm.disabled=S.sz<=0;
+ $('menu').hidden=v!=='menu';$('stage').hidden=v!=='task';$('done').hidden=v!=='done';$('bot').hidden=v!=='task';
+ $('warn').innerHTML=storeOK?'':note('w','','Your answers cannot be saved on this device. You can still practise.');
+ var tt=totals();$('prog').style.width=Math.round(tt.d/tt.n*100)+'%';
+ if(v==='menu'){$('menu').innerHTML=menuHTML();$('ttl').textContent='Internet missions';$('count').textContent=tt.mc+' / '+NM;}
+ if(v==='done'){$('done').innerHTML=doneHTML();$('ttl').textContent='My results';$('count').textContent=tt.mc+' / '+NM;}
+ if(v==='task'){
+  var m=M();$('guide').innerHTML=guideHTML();renderDesk();
+  $('ttl').textContent='Mission '+letter(S.pos)+' | '+m.title;$('count').textContent=(S.t+1)+' / '+m.tasks.length;
+  var ok=!!S.done[KEYc()],last=S.t===m.tasks.length-1,nb=$('nextbtn');
+  nb.className=ok?'btn':'btn wait';nb.textContent=ok?(last?(S.pos<NM-1?'Next mission':'See my results'):'Next task'):'Finish this task';
+  $('tip').textContent=ok?'Well done. Tap '+nb.textContent+'.':'Finish this task to go on.';
+  $('skipbtn').hidden=ok||S.blocked<2;
+ }
+}
+function flashGuide(){var g=$('gcard');if(!g)return;g.classList.remove('flash');void g.offsetWidth;g.classList.add('flash');g.scrollIntoView({block:'nearest'});}
+function advance(){
+ hush();var m=M();
+ if(S.t<m.tasks.length-1){enterTask(S.pos,S.t+1);setTimeout(function(){if(window.innerWidth<1200){var g=$('guide');if(g)g.scrollIntoView({block:'start'});}},0);}
+ else if(S.pos<NM-1){enterTask(S.pos+1,0);window.scrollTo(0,0);}
+ else{S.view='done';window.scrollTo(0,0);}
+ save();render();
+}
+/* ---------- answers ---------- */
+function curTask(){return S.view==='task'?T():null;}
+function pickMulti(pos){var t=curTask(),k=KEYc();if(!t||S.done[k])return;var i=optOrd(t,k)[pos];var p=S.picks[k]||[];var j=p.indexOf(i);if(j>-1)p.splice(j,1);else p.push(i);S.picks[k]=p;S.msg=null;save();render();}
+function checkMulti(){
+ var t=curTask(),k=KEYc();var p=S.picks[k]||[];var right=0,wrong=0,all=t.opts.filter(function(o){return o.ok;}).length;
+ p.forEach(function(i){if(t.opts[i].ok)right++;else wrong++;});
+ var need=t.need==='all'?all:2;
+ if(!p.length)S.msg={k:'w',lead:'Not yet. ',t:'Tap your answers. Then tap Check.'};
+ else if(wrong===0&&right>=need)complete(k);
+ else S.msg={k:'w',lead:'Not quite. ',t:t.badMsg};
+ save();render();
+}
+function pickSingle(pos){var t=curTask(),k=KEYc();if(!t||S.done[k])return;var i=optOrd(t,k)[pos];var o=t.opts[i];S.picks[k]=i;
+ if(o.ok)complete(k,'Well done. ',o.why+' Tap Next to go on.');else S.msg={k:'w',lead:'Not quite. ',t:o.why};save();render();}
+function allItems(t,k){return t.items.every(function(_,i){return !!S.ans[k+'.'+i];});}
+function tfPick(i,v){var t=curTask(),k=KEYc();if(!t||S.done[k]||locked(t))return;var it=t.items[i];
+ if((v==='1')===it.ok){S.ans[k+'.'+i]=1;if(allItems(t,k))complete(k,'Well done. ','All your answers are right. Tap Next to go on.');else S.msg={k:'g',lead:'Yes. ',t:it.why};}
+ else S.msg={k:'w',lead:'Not quite. ',t:'Listen to that part again.'};save();render();}
+function ordPick(i){var t=curTask(),k=KEYc();if(!t||S.done[k]||locked(t))return;var b=S.ans[k]||[];
+ if(i===b.length){b.push(i);S.ans[k]=b;if(b.length===t.items.length)complete(k,'Well done. ','The steps are in the right order. Tap Next to go on.');else S.msg={k:'g',lead:'Yes. ',t:'What comes next?'};}
+ else S.msg={k:'w',lead:'Not that one. ',t:b.length?'Which step comes next? Listen again.':'Which step comes first? Listen again.'};save();render();}
+function mPick(i,v){var t=curTask(),k=KEYc();if(!t||S.done[k]||locked(t))return;var it=t.items[i];
+ if(v===it.ans){S.ans[k+'.'+i]=v;if(allItems(t,k))complete(k,'Well done. ','You know where everything is. Tap Next to go on.');else S.msg={k:'g',lead:'Yes. ',t:it.q+' is '+it.ans+'.'};}
+ else S.msg={k:'w',lead:'Not quite. ',t:'Listen again for '+it.q.toLowerCase()+'.'};save();render();}
+function speak(a,rate){
+ S.heard[a]=true;
+ try{if(window.speechSynthesis&&window.SpeechSynthesisUtterance){var u=new SpeechSynthesisUtterance(AUDIO[a]);u.lang='en-AU';u.rate=rate;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+  else toast('Sound does not work on this device. Ask your teacher to read it aloud.');}
+ catch(e){toast('Sound does not work on this device. Ask your teacher to read it aloud.');}
+ save();render();
+}
+/* ---------- clicks ---------- */
+var resetArmed=false;
+document.addEventListener('click',function(e){
+ var el=e.target.closest?e.target.closest('[data-act],[data-evt],[data-nav],[data-set],[data-tog]'):null;
+ if(!el||el.disabled)return;
+ var a=el.getAttribute('data-act');
+ if(a!=='reset'&&resetArmed)resetArmed=false;
+ if(el.hasAttribute('data-nav')){if(S.view==='task'&&S.br.open)emitAll(go(el.getAttribute('data-nav')));return;}
+ if(el.hasAttribute('data-set')||el.hasAttribute('data-tog')){var kv=(el.getAttribute('data-set')||el.getAttribute('data-tog')).split('=');
+  if(el.hasAttribute('data-tog'))S.br.ui[kv[0]]=(String(S.br.ui[kv[0]])===kv[1]?null:kv[1]);else S.br.ui[kv[0]]=kv[1];
+  if(kv[0].indexOf('bk_')===0)S.br.ui.bk_err=null;if(kv[0].indexOf('g_')===0&&kv[0]!=='g_err')S.br.ui.g_err=null;
+  save();renderDesk();return;}
+ if(el.hasAttribute('data-evt')){var ev=el.getAttribute('data-evt');if(S.view!=='task')return;
+  if(ev==='open:browser'){if(!S.br.open)openBr([{page:'findit',hist:[]}]);}
+  else{var n=ev.split(':')[1];if(WINNAMES[n])S.win=n;}
+  emitAll([ev]);return;}
+ var r,i;
+ switch(a){
+  case 'menu':hush();S.view='menu';save();render();window.scrollTo(0,0);break;
+  case 'results':hush();S.view='done';save();render();window.scrollTo(0,0);break;
+  case 'continue':enterTask(S.pos,S.t);save();render();window.scrollTo(0,0);break;
+  case 'mission':var p=+el.getAttribute('data-pos');var mm=MISSIONS[S.mo[p]];var t0=0;while(t0<mm.tasks.length-1&&S.done[tkey(mm,t0)])t0++;if(mStats(mm).d===mm.tasks.length)t0=0;enterTask(p,t0);save();render();window.scrollTo(0,0);break;
+  case 'goto':enterTask(+el.getAttribute('data-pos'),+el.getAttribute('data-t'));save();render();window.scrollTo(0,0);break;
+  case 'hint':S.hintOn=!S.hintOn;save();render();break;
+  case 'next':if(S.done[KEYc()])advance();else{S.blocked++;S.msg={k:'w',lead:'Finish this task first. ',t:T().type==='act'?'Do the task on the computer screen.':(T().type==='talk'?'Talk to your partner. Then tap Show a model answer.':'Answer the question first.')};save();render();flashGuide();}break;
+  case 'skip':advance();break;
+  case 'back':if(S.t>0){enterTask(S.pos,S.t-1,true);}else if(S.pos>0){enterTask(S.pos-1,MISSIONS[S.mo[S.pos-1]].tasks.length-1);}else S.view='menu';save();render();break;
+  case 'talk':if(!S.done[KEYc()]){complete(KEYc(),'Good. ','Did you say something like this? Tap Next to go on.');save();render();}break;
+  case 'pick':pickMulti(+el.getAttribute('data-pos'));break;
+  case 'check-multi':checkMulti();break;
+  case 'single':pickSingle(+el.getAttribute('data-pos'));break;
+  case 'clear':delete S.picks[KEYc()];reshuffle(KEYc());S.msg=null;save();render();break;
+  case 'tf':tfPick(+el.getAttribute('data-i'),el.getAttribute('data-v'));break;
+  case 'ordpick':ordPick(+el.getAttribute('data-i'));break;
+  case 'mpick':mPick(+el.getAttribute('data-i'),el.getAttribute('data-v'));break;
+  case 'size+':S.sz=Math.min(3,S.sz+1);save();render();break;
+  case 'size-':S.sz=Math.max(0,S.sz-1);save();render();break;
+  case 'reset':if(!resetArmed){resetArmed=true;el.textContent='Tap again to start again';break;}resetArmed=false;var sz=S.sz;S=fresh();S.sz=sz;save();render();window.scrollTo(0,0);break;
+  /* desktop and browser */
+  case 'close-win':S.win=null;save();render();break;
+  case 'close-browser':closeBrowser();emitAll(['close:browser']);break;
+  case 'tile':S.br.q.push(el.getAttribute('data-w'));save();renderDesk();break;
+  case 'tile-del':S.br.q.pop();save();renderDesk();break;
+  case 'tile-clear':S.br.q=[];save();renderDesk();break;
+  case 'search':if(!S.br.q.length){toast('Tap some words first.');break;}S.br.searched=true;var sv=sEval();go('results');if(sv.ok&&sv.typo)toast('FindIt fixed a spelling mistake. Check the words at the top.');emitAll([sv.ok?'search:ok':'search:bad']);break;
+  case 'res':r=M().search.results[+el.getAttribute('data-i')];var ev2=r.go?go(r.go):[];if(r.evt)ev2.unshift(r.evt);emitAll(ev2);break;
+  case 'resnew':r=M().search.results[+el.getAttribute('data-i')];S.br.tabs.push({page:r.go,hist:[]});toast('Opened in a new tab. Look at the top of the browser.');emitAll(['newtab']);break;
+  case 'tab':S.br.at=+el.getAttribute('data-i');S.br.addrOpen=false;emitAll(['tab:switch']);break;
+  case 'tabx':emitAll(closeTab(+el.getAttribute('data-i')));break;
+  case 'newtab':S.br.tabs.push({page:'findit',hist:[]});S.br.at=S.br.tabs.length-1;S.br.q=[];emitAll(['newtab']);break;
+  case 'bback':back();emitAll(['back:click']);break;
+  case 'refresh':renderDesk();break;
+  case 'addr':S.br.addrOpen=!S.br.addrOpen;S.br.aq=[];save();renderDesk();break;
+  case 'atile':S.br.aq.push(el.getAttribute('data-w'));save();renderDesk();break;
+  case 'atile-del':S.br.aq.pop();save();renderDesk();break;
+  case 'atile-clear':S.br.aq=[];save();renderDesk();break;
+  case 'addr-go':var typed=S.br.aq.join('');if(!typed){toast('Tap the parts of the address first.');break;}var md=M().addr;S.br.addrOpen=false;
+   if(md&&md.ok.indexOf(typed.toLowerCase())>-1)emitAll(go(M().site+'/home'));else{S.br.typed=typed;go('noaddr');emitAll(['addr:bad']);}break;
+  case 'zoom+':case 'zoom-':var Z=[50,75,100,125,150,175];i=Z.indexOf(S.br.zoom);i=Math.max(0,Math.min(Z.length-1,i+(a==='zoom+'?1:-1)));S.br.zoom=Z[i];emitAll(['zoom:'+S.br.zoom]);break;
+  case 'bm':var b=BOOKMARKS[+el.getAttribute('data-i')];var ev3=go(b.go);ev3.unshift(b.evt);emitAll(ev3);break;
+  case 'pop':var pe=el.getAttribute('data-e');if(pe.indexOf('cookie:')===0)S.br.f.cookie=1;if(pe==='virus:close')S.br.f.virus=1;emitAll([pe]);break;
+  case 'say':speak(el.getAttribute('data-a'),parseFloat(el.getAttribute('data-r')));break;
+  case 'hush':hush();break;
+  case 'totop':$('bwrap').scrollTop=0;break;
+  case 'lib-confirm':var u=S.br.ui;if(!u.bk_n||!u.bk_d){u.bk_err=1;save();renderDesk();break;}var e1=go('lib/booked');e1.unshift(u.bk_n==='1'&&u.bk_d==='5nov'?'book:ok':'book:bad');emitAll(e1);break;
+  case 'garden-send':var g=S.br.ui;
+   if(!g.g_size||!g.g_day){g.g_err='Choose a plot size and a day.';emitAll(['form:incomplete']);break;}
+   if(g.g_rules!=='1'){g.g_err='Please tick the rules box.';emitAll(['form:notick']);break;}
+   g.g_err=null;var e2=go('garden/thanks');e2.unshift(g.g_size==='small'&&g.g_day==='sat'?'form:ok':'form:bad');emitAll(e2);break;
+ }
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&S.view!=='menu'){hush();S.view='menu';save();render();}});
+function tick(){var d=new Date();var h=d.getHours()%12||12;var m=('0'+d.getMinutes()).slice(-2);$('clock').textContent=h+':'+m+' '+(d.getHours()<12?'am':'pm');}
+window.addEventListener('pagehide',save);
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')save();});
+load();
+if(S.view==='task')S.view='menu';
+tick();setInterval(tick,30000);
+render();
+})();
+</script>
+</body>
+</html>
